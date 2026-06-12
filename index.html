@@ -1,0 +1,2182 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>从政模拟 · Simulation politique — 中法双语政治模拟 v8.1 — 匿名双轨 · 暗线引爆 · 终局判定</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;600;700;900&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --lp-blue: #1AA8E5;
+    --lp-blue-dark: #0090D6;
+    --paper: #F4F1EC;
+    --paper-card: #FBF9F6;
+    --ink: #16181C;
+    --ink-soft: #2B2F36;
+    --slate: #7A8694;
+    --slate-soft: #98A2AE;
+    --hair: #D9D5CD;
+    --hair-soft: #E6E2DA;
+    --track: #DAD6CE;
+    --orange: #C7842F;
+    --bg-annot: #FFF8E1;
+    --rose: #C0405B;
+    --bleu: #2C5FB3;
+    --rouge: #D8362B;
+    --jaune: #E8B23A;
+    --vert: #3F7A4F;
+  }
+  * { -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: "Noto Sans SC", Arial, Helvetica, sans-serif;
+    background: var(--paper);
+    color: var(--ink-soft);
+    line-break: strict;
+    word-break: normal;
+    overflow-wrap: break-word;
+    hanging-punctuation: allow-end;
+  }
+  /* 背景水印：球状闪电，嵌在最底层，极低对比，不干扰阅读 */
+  body::before {
+    content: "";
+    position: fixed;
+    bottom: -7vmin;
+    right: -7vmin;
+    width: 58vmin;
+    height: 58vmin;
+    z-index: 0;
+    pointer-events: none;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    opacity: .05;
+    mix-blend-mode: multiply;
+    filter: blur(.3px);
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><defs><radialGradient id='g' cx='50%25' cy='50%25' r='50%25'><stop offset='0%25' stop-color='%231AA8E5' stop-opacity='1'/><stop offset='38%25' stop-color='%231AA8E5' stop-opacity='.55'/><stop offset='70%25' stop-color='%232C5FB3' stop-opacity='.18'/><stop offset='100%25' stop-color='%232C5FB3' stop-opacity='0'/></radialGradient></defs><circle cx='100' cy='100' r='90' fill='url(%23g)'/><circle cx='100' cy='100' r='34' fill='none' stroke='%231AA8E5' stroke-width='2.4'/><circle cx='100' cy='100' r='52' fill='none' stroke='%232C5FB3' stroke-width='1.2' stroke-opacity='.6'/><g fill='none' stroke='%231AA8E5' stroke-width='1.6' stroke-linecap='round'><path d='M100 66 L108 50 L101 38 L112 22'/><path d='M134 100 L150 92 L162 101 L178 90'/><path d='M100 134 L93 150 L101 162 L90 178'/><path d='M66 100 L50 108 L38 100 L22 110'/><path d='M124 76 L138 64 L150 70'/><path d='M124 124 L138 136 L150 130'/><path d='M76 124 L62 138 L50 132'/><path d='M76 76 L62 62 L50 70'/></g><g fill='none' stroke='%232C5FB3' stroke-width='1' stroke-opacity='.5' stroke-linecap='round'><path d='M100 48 L104 34'/><path d='M152 100 L166 96'/><path d='M100 152 L96 166'/><path d='M48 100 L34 104'/></g></svg>");
+  }
+  @media (max-width: 640px){ body::before { width: 72vmin; height: 72vmin; opacity: .04; } }
+  /* 内容层抬到水印之上 */
+  body > * { position: relative; z-index: 1; }
+  .serif { font-family: "Noto Serif SC", "Times New Roman", Times, serif; }
+  em.fr { font-style: italic; word-break: keep-all; }
+  .display { font-family: "Noto Serif SC", "Times New Roman", serif; font-weight: 900; color: var(--ink); letter-spacing: -0.5px; line-height: 1.12; }
+  .display .sub { color: var(--slate); font-weight: 700; }
+  .hair { border-color: var(--hair); }
+  .logo-mark {
+    width: 42px; height: 42px; border-radius: 11px;
+    background: var(--lp-blue);
+    display:flex; align-items:center; justify-content:center;
+    color:#fff; font-family:"Noto Serif SC",serif; font-weight:700; font-size:23px;
+    box-shadow: 0 3px 10px -3px rgba(26,168,229,.6);
+    position: relative; flex-shrink:0;
+  }
+  .logo-mark::after { content:""; position:absolute; bottom:-3px; left:9px; right:9px; height:3px; background:var(--ink); border-radius:2px; }
+  .wordmark {
+    font-family: "Noto Serif SC", "Times New Roman", Times, serif;
+    font-weight: 900;
+    color: var(--ink);
+    letter-spacing: -0.5px;
+  }
+  .wordmark .fr-name { font-style: italic; font-weight: 700; color: var(--lp-blue); }
+  .track { background: var(--track); border-radius: 2px; height: 9px; overflow:hidden; }
+  .track > div { height:100%; border-radius:2px; transition: width .6s cubic-bezier(.16,1,.3,1); }
+  .choice {
+    background: #fff;
+    border: 1px solid var(--hair);
+    border-radius: 14px;
+    transition: all .18s ease;
+    cursor: pointer;
+  }
+  .choice:hover { border-color: var(--lp-blue); transform: translateY(-1px); box-shadow: 0 6px 18px -10px rgba(26,168,229,.5); }
+  .choice:active { transform: translateY(0); }
+  .fr-line { color: var(--slate); font-style: italic; }
+  .fr-reveal { display: none; }
+  body.fr-on .fr-reveal { display: block; }
+  .fr-reveal.force { display: block; }
+  .annot { border-bottom: 1px dashed var(--lp-blue); cursor: pointer; }
+  .annot sup { color: var(--lp-blue); font-size: .68em; font-weight: 700; }
+  .annot-text {
+    display: none; margin: 8px 0; padding: 10px 12px;
+    background: var(--bg-annot); border-left: 3px solid var(--orange);
+    border-radius: 6px; color: #3b2f12; font-size: 13px; line-height: 1.6; font-style: normal;
+  }
+  body.notes-open .annot-text { display: block; }
+  .annot-text.force-open { display: block; }
+  .annot-text .lbl, .lbl { display:inline-block; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; padding:1px 6px; border-radius:4px; margin-bottom:4px; }
+  .lbl-fact { background: var(--lp-blue-dark); color:#fff; }
+  .lbl-bg { background:#3F7A4F; color:#fff; }
+  .lbl-analysis { background: var(--orange); color:#fff; }
+  .lbl-sim { background: var(--rose); color:#fff; }
+  .lbl-atk { background: #7A2E3F; color:#fff; }
+  .chip-flag { display:inline-block; font-size:10px; padding:1px 7px; border-radius:999px; background:#F3E8D9; border:1px solid var(--hair); color:#6b5530; margin:1px 2px; }
+  .src { margin-top:10px; padding-top:8px; border-top:1px dashed var(--hair); font-size:11.5px; color:var(--slate); }
+  .src a { color: var(--lp-blue-dark); text-decoration: underline; text-underline-offset: 3px; word-break: break-all; }
+  .chip-c { display:inline-flex; align-items:center; gap:4px; font-size:11px; padding:1px 8px; border:1px solid var(--hair); border-radius:999px; background:#fff; color:var(--ink-soft); }
+  .card-enter { animation: slideUp .5s cubic-bezier(.16,1,.3,1); }
+  @keyframes slideUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+  .timeline-dot { transition: all .3s ease; }
+  .timeline-dot.active { transform: scale(1.35); }
+  ::-webkit-scrollbar { width:6px; height:6px; }
+  ::-webkit-scrollbar-thumb { background: var(--hair); border-radius:3px; }
+  .toggle-btn { border:1px solid var(--hair); background:#fff; color:var(--slate); transition: all .15s; }
+  .toggle-btn:hover { border-color: var(--lp-blue); color: var(--lp-blue-dark); }
+  .toggle-btn.on { background: var(--lp-blue); border-color: var(--lp-blue); color:#fff; }
+  .tab-c { border:1px solid var(--hair); background:#fff; color:var(--slate); border-radius:8px; padding:3px 10px; font-size:11px; cursor:pointer; }
+  .tab-c.on { background: var(--ink); border-color: var(--ink); color:#fff; }
+  details.recap summary { cursor:pointer; font-size:12px; color:var(--slate); text-transform:uppercase; letter-spacing:1px; }
+  details.recap summary::marker { color: var(--lp-blue); }
+  .verdict-box { border:1px solid var(--hair); background:#fff; border-radius:14px; padding:14px; text-align:left; }
+  @media (prefers-reduced-motion: reduce) {
+    .card-enter { animation: none; }
+    .track > div, .choice, .timeline-dot { transition: none; }
+  }
+</style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- START SCREEN -->
+  <div id="startScreen" class="min-h-screen flex flex-col items-center justify-center p-4 py-10">
+    <div class="w-full max-w-5xl">
+
+      <div class="flex items-center gap-3 mb-7 px-1">
+        <div class="logo-mark">政</div>
+        <div>
+          <div class="wordmark text-[17px] leading-none">从政模拟 <span class="fr-name">Simulation politique</span></div>
+          <div class="text-[10px] uppercase tracking-[2px] text-[color:var(--slate-soft)] mt-1">Simulation Politique · Édition simulation complexe</div>
+        </div>
+      </div>
+
+      <div class="rounded-[20px] border hair bg-[color:var(--paper-card)] p-6 md:p-9">
+        <div class="flex items-end justify-between flex-wrap gap-3 mb-1">
+          <h1 class="display text-4xl md:text-6xl">从政<span class="sub">模拟</span></h1>
+          <span class="wordmark text-2xl md:text-3xl">Simulation politique</span>
+        </div>
+        <div class="text-[11px] uppercase tracking-[2px] text-[color:var(--slate)] mb-4">SIMULATION POLITIQUE · 2012 → 2026 · 复杂模拟版 <em class="fr">Simulation complexe</em></div>
+        <div class="border-t hair pt-4">
+          <p class="text-[15px] text-[color:var(--ink-soft)] leading-relaxed">两条匿名复合轨迹，各 30 个决定性回合，聚焦 2017–2026。</p>
+          <p class="fr-line text-[13px] mt-1">Deux trajectoires composites, 30 tours chacune, centrées sur 2017–2026.</p>
+        </div>
+
+        <div class="flex flex-wrap gap-2 mt-5">
+          <button onclick="toggleFr()" id="frToggleStart" class="toggle-btn px-3.5 py-2 rounded-lg text-xs font-medium">显示法语对照 · Afficher le français</button>
+          <button onclick="toggleNotes()" id="notesToggleStart" class="toggle-btn px-3.5 py-2 rounded-lg text-xs font-medium flex items-center gap-1.5">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            显示注释 · Notes
+          </button>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-4 mt-6">
+          <button onclick="startGame('cadet')" class="text-left rounded-2xl border hair bg-white p-5 hover:border-[color:var(--lp-blue)] transition group">
+            <div class="flex items-start justify-between">
+              <div>
+                <h3 class="serif font-bold text-2xl text-[color:var(--ink)]">轨迹 A ·「初出茅庐」</h3>
+                <p class="text-xs text-[color:var(--slate-soft)] mt-0.5">三十多岁 · 巴黎近郊出身</p>
+                <p class="fr-line fr-reveal text-[11px]"><em class="fr">Premiers pas</em> · La trentaine · Petite couronne parisienne</p>
+              </div>
+              <div class="w-11 h-11 rounded-full flex items-center justify-center text-white font-bold text-sm" style="background:var(--bleu)">A</div>
+            </div>
+            <div class="track mt-4"><div style="width:45%;background:var(--bleu)"></div></div>
+            <div class="mt-4 space-y-1.5 text-[13px] text-[color:var(--ink-soft)]">
+              <p>· 17 岁加入<span class="annot">左翼政党<sup>*</sup><span class="annot-text"><span class="lbl lbl-bg">背景 · Contexte</span><br>学生时代为支持一场总统竞选而入党，此后数年只是普通党员，一边在精英学府读书，一边参与游行、声援等学生政治活动；真正进入政治机构要等到毕业前后的议会实习。</span></span>，学生时代的左翼底色</p>
+              <p>· 2012 年：部长办公室初级顾问，主笔讲稿</p>
+              <p>· 2014 年：近郊小城反对派市议员</p>
+            </div>
+            <p class="text-[12px] text-[color:var(--slate)] mt-3 group-hover:text-[color:var(--lp-blue-dark)]">轨迹：左翼起步 → 中间阵营 → 政府之巅 → 2026 抉择</p>
+          </button>
+
+          <button onclick="startGame('veteran')" class="text-left rounded-2xl border hair bg-white p-5 hover:border-[color:var(--lp-blue)] transition group">
+            <div class="flex items-start justify-between">
+              <div>
+                <h3 class="serif font-bold text-2xl text-[color:var(--ink)]">轨迹 B ·「宦海沉浮」</h3>
+                <p class="text-xs text-[color:var(--slate-soft)] mt-0.5">五十余岁 · 精英学府与外交系统出身</p>
+                <p class="fr-line fr-reveal text-[11px]"><em class="fr">Au long cours</em> · La cinquantaine · Grandes écoles et diplomatie</p>
+              </div>
+              <div class="w-11 h-11 rounded-full flex items-center justify-center text-white font-bold text-sm" style="background:var(--jaune)">B</div>
+            </div>
+            <div class="track mt-4"><div style="width:55%;background:var(--jaune)"></div></div>
+            <div class="mt-4 space-y-1.5 text-[13px] text-[color:var(--ink-soft)]">
+              <p>· 2009–2012：<span class="annot">内阁部长<sup>*</sup><span class="annot-text"><span class="lbl lbl-bg">背景 · Contexte</span><br>更早已任前总理办公室主任、当选国会议员；先做欧洲事务国务秘书，再在右翼政府出任农业部长——掌经济中枢要等到日后跨营之后。这一段是货真价实的部长级历练。</span></span>，2009 年起在右翼政府出任部长</p>
+              <p>· 2012 年：外省议员（右翼败选后）</p>
+              <p>· 高级文官养成路线，曾任外交官</p>
+            </div>
+            <p class="text-[12px] text-[color:var(--slate)] mt-3 group-hover:text-[color:var(--lp-blue-dark)]">轨迹：右翼世家 → 跨营豪赌 → 经济中枢 → 荒漠穿越</p>
+          </button>
+        </div>
+
+        <div class="mt-4 flex flex-wrap items-center gap-3">
+          <button onclick="startGame(Math.random()<0.5?'cadet':'veteran')" class="toggle-btn px-4 py-2.5 rounded-xl text-sm font-medium">🎲 随机分配轨迹（完全盲玩） · <em class="fr">Tirage au sort</em></button>
+          <button id="keepBtn" onclick="toggleKeep()" class="toggle-btn px-4 py-2.5 rounded-xl text-sm font-medium">🧹 每次重开自动清空进度：开</button>
+          <span class="text-[11px] text-[color:var(--slate-soft)]">规则：两条轨迹各自独立，判定只看数值。</span>
+        </div>
+
+        <!-- 民生热度数据面板 -->
+        <div class="mt-7 pt-5 border-t hair">
+          <div class="flex items-center justify-between flex-wrap gap-2 mb-3">
+            <h2 class="serif font-bold text-lg text-[color:var(--ink)]">民生热度 2016–2026 · <em class="fr text-[color:var(--slate)]">Préoccupations publiques</em></h2>
+            <span class="text-[11px] text-[color:var(--slate-soft)]">三国民意「首要问题」十年走势 · 数据来源可点击联网核验</span>
+          </div>
+          <div id="salienceStart" class="grid md:grid-cols-3 gap-4"></div>
+          <div class="annot-text force-open mt-3"><span class="lbl lbl-fact">事实 · Fait</span><br>本面板、三国突发事件、AI 对手的「话语权袭击」与 2026 年两轮市镇模拟，全部锚定公开可核验来源（Ipsos、CIS、内政部选举结果、franceinfo、Reuters/BBC 等）。突发与终局事实注均附来源链接；面板与选举数字均为真实公开数据，不作改动。</div>
+        </div>
+
+        <div class="mt-6 pt-4 border-t hair flex items-center justify-between flex-wrap gap-2">
+          <button onclick="loadGame()" class="text-xs text-[color:var(--slate)] hover:text-[color:var(--lp-blue-dark)] underline underline-offset-4">读取存档 · Charger une partie</button>
+          <span class="wordmark text-base">从政模拟 <span class="fr-name">Simulation politique</span> <span class="serif not-italic font-black text-[color:var(--slate)] text-xs tracking-tight">· 2027</span></span>
+        </div>
+      </div>
+
+      <p class="text-center text-[11px] text-[color:var(--slate-soft)] mt-5">v8.0 — 双轨 30 回合 · AI 话语权袭击与暗线系统 · 2026 两轮市镇模拟挂钩 2027 · 非党派模拟 — Claude [Anthropic] 译</p>
+      <p class="text-center text-[10px] text-[color:var(--slate-soft)] mt-1 opacity-70">非真实，全为想象，仅供娱乐，禁止一切商业用途。<span class="fr-line"><em class="fr">Pure fiction — divertissement uniquement, tout usage commercial interdit.</em></span></p>
+    </div>
+  </div>
+
+  <!-- GAME SCREEN -->
+  <div id="gameScreen" class="hidden min-h-screen flex flex-col">
+    <header class="sticky top-0 z-40 border-b hair bg-[color:var(--paper)]/95 backdrop-blur">
+      <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+        <div class="flex items-center gap-3 min-w-0">
+          <div id="avatar" class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm text-white shrink-0"></div>
+          <div class="min-w-0">
+            <div id="playerName" class="serif font-bold leading-tight truncate text-[color:var(--ink)]"></div>
+            <div class="text-[11px] text-[color:var(--slate-soft)] flex items-center gap-2">
+              <span id="turnInfo"></span><span>·</span><span id="dateInfo"></span>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <button onclick="toggleFr()" id="frToggleGame" class="toggle-btn px-2.5 py-1.5 rounded-lg text-[11px] font-medium">FR</button>
+          <button onclick="toggleNotes()" id="notesToggleGame" class="toggle-btn px-2.5 py-1.5 rounded-lg text-[11px] font-medium">注释</button>
+          <button onclick="saveGame()" class="toggle-btn px-2.5 py-1.5 rounded-lg text-[11px]">保存</button>
+          <button onclick="location.reload()" class="toggle-btn px-2.5 py-1.5 rounded-lg text-[11px]">退出</button>
+        </div>
+      </div>
+      <div class="border-t hair">
+        <div class="max-w-5xl mx-auto px-4 py-2.5 grid grid-cols-4 gap-3">
+          <div>
+            <div class="flex justify-between text-[10px] uppercase tracking-wide text-[color:var(--slate)] mb-1"><span>人气</span><span id="stat-pop-val">50</span></div>
+            <div class="track"><div id="stat-pop" style="width:50%;background:var(--lp-blue)"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-[10px] uppercase tracking-wide text-[color:var(--slate)] mb-1"><span>人脉</span><span id="stat-res-val">50</span></div>
+            <div class="track"><div id="stat-res" style="width:50%;background:var(--bleu)"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-[10px] uppercase tracking-wide text-[color:var(--slate)] mb-1"><span>正当性</span><span id="stat-leg-val">50</span></div>
+            <div class="track"><div id="stat-leg" style="width:50%;background:#3F7A4F"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-[10px] uppercase tracking-wide text-[color:var(--slate)] mb-1"><span>媒体</span><span id="stat-med-val">50</span></div>
+            <div class="track"><div id="stat-med" style="width:50%;background:var(--jaune)"></div></div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-1 max-w-5xl w-full mx-auto px-4 py-6 md:py-9 grid lg:grid-cols-[1fr_280px] gap-7">
+      <div>
+        <div id="eventCard" class="card-enter rounded-[18px] border hair bg-[color:var(--paper-card)] p-6 md:p-8">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <div id="eventDate" class="text-[11px] uppercase tracking-[1.5px] text-[color:var(--slate)] mb-2"></div>
+              <h2 id="eventTitle" class="display text-2xl md:text-[32px]"></h2>
+              <p id="eventTitleFr" class="fr-line fr-reveal text-sm mt-1"></p>
+            </div>
+            <div id="eventIcon" class="text-2xl opacity-50"></div>
+          </div>
+          <div class="border-t hair my-4"></div>
+          <p id="eventText" class="text-[15px] leading-relaxed text-[color:var(--ink-soft)]"></p>
+          <p id="eventTextFr" class="fr-line fr-reveal text-[13px] leading-relaxed mt-2"></p>
+
+          <div id="choices" class="mt-7 grid gap-3"></div>
+        </div>
+        <div id="surpriseBanner" class="hidden mt-4 p-3.5 rounded-xl border border-[color:var(--lp-blue)] bg-[color:var(--lp-blue)]/8 text-[color:var(--lp-blue-dark)] text-sm"></div>
+      </div>
+
+      <aside class="space-y-5">
+        <div class="rounded-2xl border hair bg-white p-5">
+          <h3 class="text-[10px] uppercase tracking-[1.5px] text-[color:var(--slate)] mb-3 pb-2 border-b hair">历史背景 · Contexte</h3>
+          <div id="contextBox" class="text-sm text-[color:var(--ink-soft)] leading-relaxed"></div>
+          <div id="contextBoxFr" class="fr-line fr-reveal text-[12.5px] leading-relaxed mt-2 pt-2 border-t border-dashed hair"></div>
+        </div>
+        <div class="rounded-2xl border hair bg-white p-5">
+          <h3 class="text-[10px] uppercase tracking-[1.5px] text-[color:var(--slate)] mb-3 pb-2 border-b hair">路线图 · Feuille de route</h3>
+          <div id="roadmap" class="space-y-2 text-xs"></div>
+        </div>
+        <div class="rounded-2xl border hair bg-white p-5">
+          <h3 class="text-[10px] uppercase tracking-[1.5px] text-[color:var(--slate)] mb-3 pb-2 border-b hair">AI对手 · Adversaires</h3>
+          <div id="aiPanel" class="space-y-3 text-[12px]"></div>
+          <canvas id="aiChart" width="240" height="80" class="mt-3 w-full"></canvas>
+          <div class="text-[10px] text-[color:var(--slate-soft)] mt-1">四个对手会成长并主动发起「话语权袭击」；终局与你同台排序</div>
+        </div>
+        <div class="rounded-2xl border hair bg-white p-5">
+          <div class="flex items-center justify-between mb-3 pb-2 border-b hair">
+            <h3 class="text-[10px] uppercase tracking-[1.5px] text-[color:var(--slate)]">民生热度 · Préoccupations</h3>
+            <div class="flex gap-1">
+              <button class="tab-c on" data-c="fr" onclick="salienceTab('fr',this)">🇫🇷</button>
+              <button class="tab-c" data-c="uk" onclick="salienceTab('uk',this)">🇬🇧</button>
+              <button class="tab-c" data-c="es" onclick="salienceTab('es',this)">🇪🇸</button>
+            </div>
+          </div>
+          <div id="salienceSide" class="text-[12px] leading-relaxed"></div>
+        </div>
+      </aside>
+    </main>
+
+    <footer class="border-t hair bg-[color:var(--paper)]">
+      <div class="max-w-5xl mx-auto px-4 py-3">
+        <div id="timeline" class="flex items-center gap-2 overflow-x-auto"></div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- MODAL -->
+  <div id="modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="closeModal()"></div>
+    <div class="relative w-full max-w-lg rounded-[20px] border hair bg-[color:var(--paper-card)] shadow-2xl max-h-[90vh] overflow-y-auto">
+      <div class="p-7">
+        <div id="modalContent"></div>
+        <button id="modalBase" onclick="closeModal()" class="mt-6 w-full py-3 rounded-xl text-white font-medium transition hover:opacity-90" style="background:var(--lp-blue)">继续 · Continuer</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+// ===== DATA v8.0 — 复合双轨 30 回合 · AI 话语权袭击 · 暗线系统 · 两轮市镇模拟 =====
+// 设计规则：
+// 1) 玩家轨迹「依据真实履历但不是真人」：骨架事件经 web 核验，细节刻意偏移虚构化；全程与终局不出现可指认的玩家人名。
+// 2) AI 对手为真实政治光谱的复合原型（左翼论坛/市长建制/秩序右翼/国民继承者），其袭击事件锚定真实新闻（来源见各事件 src）。
+// 3) 暗线：主干选择写入 flags；AMBUSHES 按 (轨迹, 回合, flag 条件) 确定性引爆，无时间错位。
+// 4) 突发事件按精确年份过滤，2026 年主干不会触发 2024 年事件。
+// 5) 历史背景人物（Hollande、Macron、Sarkozy 等）保留为时代坐标。
+
+const SCENARIOS = {
+  cadet: {
+    name: "轨迹 A ·「初出茅庐」", nameFr: "Premiers pas", color: "var(--bleu)", avatar: "A",
+    startStats: { pop: 30, res: 38, leg: 28, med: 26 },
+    context: "",
+    contextFr: "",
+    turns: [
+      { date:"2012 年 6 月",
+        dateFr:"Juin 2012",
+        title:"部长办公室",
+        titleFr:"Le cabinet",
+        icon:"🏛️",
+        text:"23 岁，左翼刚胜选。你进了一个社会事务部委的办公室，职务一肩挑：替部长写讲稿、又管议会联络。紧缩年代已经开始。（序章：2012–2016 压缩为三回合）",
+        textFr:"23 ans. La gauche vient de gagner. Au cabinet, tu cumules : plume du ministre et liaison parlementaire. La rigueur commence déjà.",
+        choices:[
+        {t:"埋头把这份差事做到极致，让部长离不开你", tFr:"Te rendre indispensable au ministre", e:{"res": 3, "med": -1}, o:"你成了部长最信赖的幕后手，核心圈把你记下了；但你始终在幕后，外面没人听过你的名字。", oFr:"Le ministre ne peut plus se passer de toi — mais dehors, personne ne connaît ton nom.", flag:"flagBackroom"},
+        {t:"借职务之便，开始为自己织一张人脉网", tFr:"Tisser ton propre réseau", e:{"res": 2, "med": 1, "leg": -1}, o:"你结交议员、攒下跨派人脉和一点薄名；本职上却被嘀咕没全扑上去，部长对你多了一分保留。", oFr:"Un réseau se tisse ; au cabinet, on murmure que tu te disperses.", flag:"flagNetwork"}
+      ] },
+      { date:"2014 年 3 月",
+        dateFr:"Mars 2014",
+        title:"第一个地方席位",
+        titleFr:"Premier mandat local",
+        icon:"🏘️",
+        text:"市选当年左翼全国大败。你名单排位靠后、本来选不上；头位中途退出，你顺位递补进市议会。",
+        textFr:"Municipales : débâcle nationale. Mal placé sur la liste, tu entres au conseil par désistement du tête de liste.",
+        choices:[
+        {t:"把这席位当回事，逐场旁听、扎进社区", tFr:"Prendre le mandat au sérieux", e:{"res": 3, "med": -1}, o:"你在这块小地方扎下了真实的根；但全国层面，你仍是没人听过的名字。", oFr:"Un vrai ancrage local ; au national, tu restes inconnu.", flag:"flagLocal"},
+        {t:"当全国跳板，人很少在场", tFr:"Un tremplin, sans plus", e:{"med": 1, "res": -2}, o:"省下的精力都投向中央；可地方根基薄了，日后无处可退。", oFr:"L'énergie file vers Paris ; l'ancrage local s'étiole."}
+      ] },
+      { date:"2016 年",
+        dateFr:"2016",
+        title:"老党与新门之间",
+        titleFr:"Entre le vieux parti et la porte neuve",
+        icon:"🚢",
+        text:"你属于老党里支持那位部长经济改革（连周日营业都松绑）的少数派，党内不少人反对。那位部长另起炉灶、宣布参选总统。",
+        textFr:"Tu es de la minorité qui soutenait les réformes économiques du ministre. Il fonde son mouvement et vise l'Élysée.",
+        choices:[
+        {t:"趁早跟投，当新门的第一批骨干", tFr:"Rallier tôt le mouvement", e:{"res": 2, "leg": 1, "pop": -2}, o:"你离开了老党、断了退路，把前途押在一个还没人敢打包票的新运动上。你是最早的一批；老党那边给你的最初评语是：「投机者」。", oFr:"Tu coupes les ponts et mises tout sur un pari incertain. Chez les anciens, le premier verdict tombe : « opportuniste ».", flag:"flagEarly"},
+        {t:"留在老党，等局势明朗", tFr:"Rester et attendre", e:{"leg": 1, "res": -2}, o:"你留在熟悉的地方观望，没烧任何桥；可万一那场赌局赢了，你只是闻风跟上的后来者。", oFr:"Aucun pont brûlé ; mais si le pari réussit, tu ne seras qu'un suiveur."}
+      ] },
+      { date:"2017 年 6 月",
+        dateFr:"Juin 2017",
+        title:"立法选举",
+        titleFr:"Législatives",
+        icon:"🗳️",
+        text:"新阵营大胜，大批新人随浪潮涌进议会。你在一块长期偏中右的近郊选区有地方老底子——2014 年起就是那里的市议员。浪潮当前，这一仗怎么打？",
+        textFr:"Raz-de-marée du nouveau bloc. Tu as un ancrage dans une banlieue plutôt à droite — conseiller municipal depuis 2014. Comment livrer cette bataille ?",
+        choices:[
+        {t:"靠地方老底子稳扎，把这块不偏向你的选区做成自己的根据地", tFr:"S'appuyer sur l'ancrage local", e:{"res": 3, "leg": 1}, o:"你扫街熬夜，赢下了这块本不偏向你这边的选区——议席和根据地都到手。只是你击败的，是本地那位老市长亲自指定的接班人。此后他逮着场合就拿你这个新人开涮，冷嘲热讽没断过。", oFr:"À force d'arpenter les rues et de veiller tard, tu gagnes une circonscription qui ne t'était pas acquise : siège et fief. Mais le battu était le dauphin désigné du vieux maire local — qui, depuis, ne rate pas une occasion de brocarder le nouveau venu.", flag:"flagTerrain"},
+        {t:"全押全国浪潮，本地少花功夫也能搭上风", tFr:"Surfer la vague nationale", e:{"leg": 2, "res": -2}, o:"你靠浪潮轻松进了议会；但地方根基浅，浪潮一退，这块选区未必还托得住你。", oFr:"La vague te porte au Palais-Bourbon ; à marée basse, rien ne te retiendra.", flag:"flagWave"},
+        {t:"不亲自下场，留在党务/幕后", tFr:"Rester en coulisses", e:{"res": 2, "leg": -2}, o:"你留住了幕后的灵活与人脉；但没有自己的议席，始终仰人鼻息。", oFr:"Souplesse et réseaux ; mais sans siège, tu dépends des autres."}
+      ] },
+      { date:"2018 年 1 月",
+        dateFr:"Janvier 2018",
+        title:"一身两职",
+        titleFr:"Deux casquettes",
+        icon:"⚔️",
+        text:"你此刻一身两职：新党发言人，又是一部高等教育录取改革法的报告人——这部法催生了全国统一录取平台，此刻正引发学生抗议、多所大学被封堵。两摊都在手上，精力只有一份。",
+        textFr:"Porte-parole du parti et rapporteur d'une loi sur l'accès à l'université — celle qui crée la plateforme nationale, déjà contestée dans les facs. Une seule énergie pour deux fronts.",
+        choices:[
+        {t:"重心压向法案，做「懂行的报告人」", tFr:"Prioriser le texte de loi", e:{"leg": 3, "pop": -2, "med": -1}, o:"你成了这部改革的脸面，专业口碑立住了；但学生和家长的骂声冲着你来，镜头给你的也更少。", oFr:"Une réputation de sérieux — et la colère des amphis qui se tourne vers toi.", flag:"flagDossier"},
+        {t:"重心压向发言人，靠电视辩论冲名气", tFr:"Prioriser les plateaux télé", e:{"med": 3, "leg": -2}, o:"电视辩论让你名气见涨；可「只会上电视」的标签开始粘上你，攻击手当久了也得罪人。", oFr:"La notoriété grimpe ; l'étiquette « bon qu'à la télé » colle déjà.", flag:"flagMedia"},
+        {t:"两头都抓，谁也不放", tFr:"Tenir les deux fronts", e:{"med": 1, "leg": 1, "res": -2}, o:"哪边都在场，但哪边都没扎透，落了个「样样沾、样样松」。", oFr:"Présent partout, enraciné nulle part.", flag:"flagBoth"}
+      ] },
+      { date:"2018 年秋",
+        dateFr:"Automne 2018",
+        title:"党团主席之争",
+        titleFr:"La présidence du groupe",
+        icon:"🎯",
+        text:"秋季开议，议会党团主席空缺。你决定参选，对外说「只是来占个位置」，私下却全力拉票，眼看成了大热门。阵营内部气氛骤紧：走廊里流传对你性取向和伴侣的影射，一名同党议员直接威胁——再不退，就把你那段连对方父母都不知情的关系捅给媒体。",
+        textFr:"La présidence du groupe se libère. Candidat « pour prendre date », te voilà favori. Les allusions circulent ; un député menace de révéler à la presse une union que même les parents de ton compagnon ignorent.",
+        choices:[
+        {t:"顶住威胁，拒绝退出", tFr:"Tenir malgré la menace", e:{"leg": 2, "med": 1, "res": -3}, o:"你拒绝退，党团高层出面「提醒分寸」；威胁没收回，几位本可帮你的人开始躲着你。", oFr:"Tu ne cèdes pas ; la menace demeure, et des soutiens s'éloignent."},
+        {t:"在高层要求下退选", tFr:"Te retirer à la demande d'en haut", e:{"res": 3, "med": -1, "leg": -1}, o:"你收手了。两周后，你在一场婚礼上得知将入阁——10 月 16 日，你成为第五共和国最年轻的部长（29 岁）。那句「会记得你的牺牲」，被兑现成了部长位子。", oFr:"Tu te retires. Deux semaines plus tard, on t'annonce le gouvernement : à 29 ans, le plus jeune ministre de la Ve.", flag:"flagSacrifice"}
+      ],
+        surprise:"outing" },
+      { date:"2018 年 12 月",
+        dateFr:"Décembre 2018",
+        title:"一档直播",
+        titleFr:"Un direct",
+        icon:"📺",
+        text:"任命才一个半月。一场社会运动席卷全国，凯旋门两天前被损毁，政府一时拿不出统一说法。你整个下午在参议院审一部冷门协会法案——和这场运动毫不相干。傍晚，一档晚八点直播来电：他们照政府名单一个个问下来，被问的人都谢绝了，最后问到你。几分钟内答复。",
+        textFr:"Six semaines au gouvernement. Le pays brûle, l'Arc de triomphe saccagé. Tu défendais au Sénat un texte obscur. Le 20h appelle : tous ont décliné. Réponse en quelques minutes.",
+        choices:[
+        {t:"接下来，今晚就上", tFr:"Accepter, y aller ce soir", e:{"med": 3, "leg": 2, "pop": -1}, o:"主持人当镜头直言：政府没人肯来、却派来个分管别的领域的新人，说不过去——「不过你能来，也算有勇气」。同场坐着几位立场鲜明的对话者；你谈了一个小时，没被带偏、没失态。从此再没人用同样的眼光看你。", oFr:"« Vous n'avez rien à faire là… mais c'est courageux. » Une heure seul contre tous, sans faute. Plus personne ne te regarde pareil.", flag:"flagVolontaire"},
+        {t:"像其他人一样谢绝", tFr:"Décliner comme les autres", e:{"res": 1, "med": -2}, o:"你谢绝了。演播室椅子空着，被全国解读为「权力真空」的隐喻。", oFr:"La chaise vide devient la métaphore d'un pouvoir à la dérive."},
+        {t:"接，但先要一套官方口径再上", tFr:"Accepter, exiger des éléments de langage", e:{"med": 1, "leg": -1}, o:"上场前几秒你打电话要口径，只听到一句「别把门打开，但也别关上」，没别的准备就上了。你勉强撑住，底气却明显不足。", oFr:"Pour tout viatique : « N'ouvre pas la porte, ne la ferme pas. » Tu tiens, sans assurance."}
+      ] },
+      { date:"2019 年 11 月",
+        dateFr:"Novembre 2019",
+        title:"里昂打来的电话",
+        titleFr:"L'appel de Lyon",
+        icon:"📞",
+        text:"一名学生在里昂一处学生服务中心前自焚，学生困境骤然引爆。主管高等教育的部长正随科考队在外地，没人接得住这个场。你分管青年。",
+        textFr:"Un étudiant s'immole devant un Crous à Lyon. La ministre de tutelle est en mission lointaine. Tu as la jeunesse dans ton portefeuille.",
+        choices:[
+        {t:"约谈所有学生组织、拿出一个看得见的具体方案", tFr:"Recevoir les syndicats, sortir une mesure concrète", e:{"pop": 3, "leg": 1, "res": -2}, o:"你发现政府刚花几千万把助学金涨了 1.7%——又贵、又没人感觉得到。你提议把同一笔钱拿去做「1 欧一餐」：看得见、能进日常。你抢下了话语权；但越界进了别人的部委，主管部长记你一笔。", oFr:"Avec le même argent qu'une revalorisation invisible : le repas à 1 €. Visible, quotidien. Mais tu as marché sur un autre ministère.", flag:"flagVolontaire"},
+        {t:"先表达哀悼与关切，具体措施留给主管部门", tFr:"Compassion, puis renvoyer au ministère compétent", e:{"leg": 1, "pop": -2}, o:"你守了规矩、没越界；可你只露了个面，什么也没留下。", oFr:"Tu restes dans ton couloir — et ne laisses rien derrière toi."}
+      ] },
+      { date:"2019 年 12 月",
+        dateFr:"Décembre 2019",
+        title:"退休改革·年轻人那一关",
+        titleFr:"Retraites : convaincre les jeunes",
+        icon:"🚇",
+        text:"统一点数制改革引发大罢工，交通受阻。政府要派人去向年轻人解释这场改革——这活落到你头上。",
+        textFr:"La réforme par points déclenche la grève. À toi d'expliquer la réforme aux jeunes.",
+        choices:[
+        {t:"用数据和图表做教学式沟通", tFr:"La pédagogie par les chiffres", e:{"leg": 2, "pop": -2}, o:"你显得专业可信；但那套冷冰冰的图表，打动不了正在上街的人。", oFr:"Crédible, mais les courbes ne parlent pas à la rue."},
+        {t:"承认痛点、主打代际公平", tFr:"Assumer la douleur, jouer l'équité générationnelle", e:{"pop": 3, "leg": -2}, o:"你接地气、拉了好感；但自家阵营嫌你「替对手说话」。", oFr:"Tu touches juste ; ton camp grince des dents."}
+      ] },
+      { date:"2020 年 3 月",
+        dateFr:"Mars 2020",
+        title:"疫情",
+        titleFr:"La pandémie",
+        icon:"🦠",
+        text:"疫情袭来：医院承压、学校关闭、全国禁足。你还在教育口，但所有人都被推到一线。",
+        textFr:"Hôpitaux saturés, écoles fermées, confinement national. Tu es encore à l'éducation, mais tout le monde est en première ligne.",
+        choices:[
+        {t:"主动多上前线沟通、压上个人信用", tFr:"Monter au front médiatique", e:{"med": 3, "pop": -1}, o:"你天天上前线，存在感拉满；但你的每句话都被实时打分，说错一句就是全国级的失误。", oFr:"Omniprésent — et chaque phrase notée en temps réel.", flag:"flagVolontaire"},
+        {t:"守住自己条线、少出风头", tFr:"Tenir ton couloir, discrètement", e:{"leg": 1, "med": -2}, o:"你一个错没犯；可这波「露脸窗口」，你没占到。", oFr:"Zéro faute — et zéro fenêtre saisie."}
+      ],
+        surprise:"covid" },
+      { date:"2020 年 7 月",
+        dateFr:"Juillet 2020",
+        title:"政府发言人",
+        titleFr:"Porte-parole du gouvernement",
+        icon:"🎙️",
+        text:"31 岁，你被任命为政府发言人，每周面对全国镜头。新总理出身右翼、来自前朝——你并不在意。当国务秘书那两年，上级部长见你声名渐起，待你愈发刻薄，同僚私下给你起了个绰号「娜塔莎」（取自那个被囚地下室八年的女孩）；这把椅子，总算让「娜塔莎」翻篇了。",
+        textFr:"Porte-parole à 31 ans. Peu importe que le nouveau Premier ministre vienne de la droite. Au secrétariat d'État, ton ministre de tutelle te « sadisait » — on te surnommait « Natascha ». Ce fauteuil enterre le surnom.",
+        choices:[
+        {t:"用金句和反击设定议程", tFr:"Imposer l'agenda par la formule", e:{"med": 3, "leg": -1}, o:"你的声量起来了，上头爱看；但树敌也多，「嘴替」的印象更深了。", oFr:"Le volume monte, l'étiquette de « voix de son maître » aussi."},
+        {t:"用克制和精确立住可信", tFr:"La précision comme style", e:{"leg": 3, "med": -1}, o:"你攒下了长期信誉；但不够亮眼，存在感被别人抢走。", oFr:"Du crédit qui dure ; l'éclat va aux autres."}
+      ],
+        oIf:[{flag:"flagVolontaire", e:{"res": 2}, text:"那场没人愿上的直播、那个被你做成「1 欧餐」的烂摊子——你能坐到这把椅子，是从那些「补位」开始的。", textFr:"Le direct refusé par tous, le repas à 1 € : c'est par les brèches que tu es arrivé ici."}, {e:{}, text:"你连轴转，把手头的事一件件啃完。一张纸条被拍到：「去哪给这年轻人再找根骨头啃？」", textFr:"Tu enchaînes les dossiers sans répit, un à un. Une note volée : « Où trouver un autre os à ronger pour le petit jeune ? »"}] },
+      { date:"2021 年 6 月",
+        dateFr:"Juin 2021",
+        title:"大区选举之后",
+        titleFr:"Après les régionales",
+        icon:"📊",
+        text:"大区选举你阵营成绩很差、弃权率创高。作为政府发言人，例行记者会上你得给个说法。",
+        textFr:"Régionales calamiteuses, abstention record. Au point presse, il faut une explication.",
+        choices:[
+        {t:"如实承认地方薄弱、不粉饰", tFr:"Reconnaître la faiblesse locale", e:{"leg": 2, "pop": -1, "res": -1}, o:"你显得诚实；可这等于替政府认栽，自家阵营不悦。", oFr:"Honnête — et ton camp n'apprécie pas l'aveu."},
+        {t:"归因弃权与疫情、把话题带开", tFr:"Invoquer l'abstention et la crise", e:{"res": 2, "med": -2}, o:"你护住了阵营；但被指回避，媒体不买账。", oFr:"Le camp est protégé ; la presse n'achète pas."}
+      ] },
+      { date:"2022 年 5 月",
+        dateFr:"Mai 2022",
+        title:"连任后改组",
+        titleFr:"Remaniement post-réélection",
+        icon:"🏛️",
+        text:"连任后改组在即。你一直被贴「上电视的发言人」标签。改组把你往哪放，部分取决于你怎么开口要。",
+        textFr:"Remaniement en vue. L'étiquette « porte-parole télégénique » te colle. Ta destination dépend de ce que tu oses demander.",
+        choices:[
+        {t:"要一个能证明实务的硬部委（管钱）", tFr:"Demander un ministère régalien (les comptes)", e:{"leg": 3, "res": 1, "pop": -3}, o:"「只会上电视」的标签，你总算有机会撕了；但你进的是最得罪人的紧缩岗，风险陡增。", oFr:"L'occasion d'arracher l'étiquette — au poste le plus ingrat."},
+        {t:"留在传播岗、巩固优势", tFr:"Rester à la communication", e:{"med": 2, "leg": -2}, o:"你待在舒适区；但「嘴替」的天花板，就此封死。", oFr:"La zone de confort — et son plafond."}
+      ],
+        oIf:[{flag:"flagMedia", e:{}, text:"这两年那标签缠得你够紧——要硬部委，有一半就是为了甩掉它。", textFr:"L'étiquette colle depuis deux ans ; ce poste, c'est aussi pour s'en défaire."}] },
+      { date:"2022 年 7 月",
+        dateFr:"Juillet 2022",
+        title:"预算部委·悬浮议会",
+        titleFr:"Le Budget, sans majorité",
+        icon:"💰",
+        text:"你接掌预算部委。议会没有绝对多数，预算要靠宪法工具硬闯——按下去的是总理，出来替它挨骂的常是你。",
+        textFr:"Le Budget t'échoit. Sans majorité absolue, les textes passent au forceps constitutionnel — le PM appuie, toi tu encaisses.",
+        choices:[
+        {t:"当政府的「预算之盾」、全力替硬通过辩护", tFr:"Être le bouclier budgétaire", e:{"res": 3, "leg": 1, "pop": -3}, o:"上头记下了你的忠诚；但你把自己绑上了最招骂的那辆战车。", oFr:"Loyauté notée — arrimé au char le plus haï.", flag:"flagBouclier"},
+        {t:"保持距离、只谈技术不碰政治工具", tFr:"Rester technique, à distance", e:{"leg": 2, "res": -2}, o:"你自保得干净；但被嫌「关键时刻不肯顶上」。", oFr:"Propre — mais absent quand ça compte."}
+      ] },
+      { date:"2023 年 1 月",
+        dateFr:"Janvier 2023",
+        title:"退休改革·64 岁",
+        titleFr:"Retraites : 64 ans",
+        icon:"🔥",
+        text:"64 岁退休改革引爆百万人上街。改革不归你管，但「不改、财政撑不住」这套论证要你出来讲。",
+        textFr:"La réforme des 64 ans jette des millions dans la rue. Pas ton dossier — mais l'argument budgétaire, c'est toi qui le portes.",
+        choices:[
+        {t:"一线扛财政论证、电视连轴转", tFr:"Porter l'argument budgétaire en première ligne", e:{"leg": 3, "med": 1, "pop": -4}, o:"你成了这场改革的财政代言人；民意的反噬，直接砸到你头上。", oFr:"Visage budgétaire de la réforme — et cible directe de la colère.", flag:"flagPensionDef"},
+        {t:"守住自己条线、少卷进去", tFr:"Rester dans ton couloir", e:{"pop": 1, "res": -2}, o:"你躲过了骂名；但自家阵营记下了你「不肯并肩」。", oFr:"Épargné par la rue ; noté par les tiens."}
+      ] },
+      { date:"2023 年 7 月",
+        dateFr:"Juillet 2023",
+        title:"接掌教育部·开学前",
+        titleFr:"L'Éducation, avant la rentrée",
+        icon:"🎒",
+        text:"你接掌教育部。开学在即，校园世俗性争议升温，上头在催你表态。",
+        textFr:"L'Éducation nationale. La rentrée approche, la laïcité s'embrase, on te presse de trancher.",
+        choices:[
+        {t:"赶在开学前宣布禁令", tFr:"Annoncer l'interdiction avant la rentrée", e:{"med": 3, "leg": 1, "pop": -2}, o:"「果断」的形象立住了；但你成了这场撕裂的脸面，左右两边同时炸锅。", oFr:"Image de fermeté — et visage d'une fracture.", flag:"flagLaicite"},
+        {t:"顶住催促、交校长就地裁量+对话机制", tFr:"Confier aux chefs d'établissement + dialogue", e:{"leg": 2, "med": -2, "res": -1}, o:"你稳住了；但被指「和稀泥、不敢担当」。", oFr:"Mesuré — donc accusé de tiédeur."}
+      ] },
+      { date:"2023 年 12 月",
+        dateFr:"Décembre 2023",
+        title:"不归你管的那部法",
+        titleFr:"La loi qui n'est pas la tienne",
+        icon:"⚖️",
+        text:"一部强硬移民法把执政阵营撕成两半：议会先以 270:265 整体否决，再靠右翼与极右的票以 349:186 硬过。当晚，一位左翼出身的部长辞职抗议，另外几位放话要走。它不归你管，你也确实没有公开掺和这场争论。但「该不该私下表态」还在你手里。",
+        textFr:"Une loi immigration durcie déchire la majorité : rejet d'abord (270-265), adoption ensuite avec les voix de la droite et de l'extrême droite (349-186). Un ministre démissionne le soir même, d'autres menacent. Pas ton dossier, et tu n'as rien dit en public. Reste la question : dire quelque chose en privé ?",
+        choices:[
+        {t:"继续置身事外、专注自己的教育条线", tFr:"Rester à l'écart", e:{"leg": 1, "res": -1}, o:"你干净地躲过了一场没人能全身而退的恶仗；但被记下「关键议题缩头」。", oFr:"Épargné par une bataille sans vainqueur — noté absent.", flag:"flagSilentImmig"},
+        {t:"私下向上头表达保留、但不公开", tFr:"Réserves en privé, silence en public", e:{"res": 1, "leg": -1}, o:"你留了态度的痕迹；但两头不讨好，还可能走漏。", oFr:"Une trace d'opinion — qui peut fuiter."}
+      ] },
+      { date:"2024 年 1 月",
+        dateFr:"Janvier 2024",
+        title:"总理",
+        titleFr:"Matignon",
+        icon:"🏠",
+        text:"你成为第五共和国最年轻的总理（34 岁）。上任头几天，北部洪灾、随后农民封锁高速——没有蜜月，第一周就是危机。",
+        textFr:"Le plus jeune Premier ministre de la Ve (34 ans). Inondations au nord, blocages agricoles dans la foulée : pas de lune de miel.",
+        choices:[
+        {t:"第一时间下现场、快速给回应", tFr:"Aller sur le terrain, répondre vite", e:{"pop": 3, "med": 1, "leg": -1}, o:"你的果断形象出来了；但仓促表态，也留下了话柄。", oFr:"Réactif — et quelques phrases qui resteront."},
+        {t:"程序化应对、守住财政与政治红线", tFr:"Gérer en procédure, tenir les lignes", e:{"leg": 2, "pop": -2}, o:"你稳健；但被嫌「冷、慢、没温度」。", oFr:"Solide — froid, lent, sans chaleur."}
+      ],
+        oIf:[{e:{}, text:"上任两周，那部法走完最后一程：宪法委员会把 86 条砍掉 35 条——32 条因「程序搭车」出局，3 条实质违宪——次日法律照样颁布。你定调：不重开辩论，「落实法律、恢复秩序」。重新组阁换人。", textFr:"Deux semaines après ton arrivée, le Conseil constitutionnel ampute la loi de 35 articles sur 86 — 32 cavaliers, 3 censures au fond — et elle est promulguée dès le lendemain. Ta ligne : pas de nouveau débat, « appliquer la loi, rétablir l'ordre ». Nouveau gouvernement, changement d'équipe."}] },
+      { date:"2024 年 6 月",
+        dateFr:"Juin 2024",
+        title:"解散之夜",
+        titleFr:"Le soir de la dissolution",
+        icon:"🌪️",
+        text:"欧洲选举惨败当晚，总统宣布解散议会——你事先并未被充分商议。你的总理生涯被一个不由你做的决定改写。镜头转向你。",
+        textFr:"Défaite aux européennes ; le Président dissout — sans vraiment te consulter. Ta primature bascule sur une décision qui n'est pas la tienne. Caméras sur toi.",
+        choices:[
+        {t:"镜头前如实流露：「这不是我会做的决定」", tFr:"Dire que ce n'aurait pas été ta décision", e:{"pop": 2, "med": 3, "res": -3}, o:"那一下停顿与那句话，被全国看见；你赢得了共情，但与宫廷的裂痕从此公开。", oFr:"La pause et la phrase font le tour du pays ; la fissure avec le château est publique.", flag:"flagSpoke"},
+        {t:"不表态、扛起这场仓促的战役", tFr:"Se taire et mener la campagne", e:{"res": 2, "leg": 1, "med": -2}, o:"你保住了忠诚的姿态；但被看作「沉默的执行者」。", oFr:"Loyal — et exécutant silencieux.", flag:"flagLoyal"}
+      ],
+        surprise:"dissolution" },
+      { date:"2024 年 7 月",
+        dateFr:"Juillet 2024",
+        title:"第一轮之后",
+        titleFr:"Après le premier tour",
+        icon:"🧱",
+        text:"第一轮国民阵营领跑。作为总理，本方排名第三的候选人要不要号召退选、把票让出去阻挡对方过半——哪怕受益者里有激进左翼？",
+        textFr:"Le bloc national en tête au premier tour. Faut-il appeler tes troisièmes à se désister pour faire barrage — même au profit de la gauche radicale ?",
+        choices:[
+        {t:"号召第三名系统性退选", tFr:"Appeler au désistement systématique", e:{"leg": 3, "pop": -2, "res": -1}, o:"你短期挡住了对手过半；但这句号召被截了图，存进了别人的弹药库。", oFr:"Le barrage tient — et la phrase est archivée dans l'arsenal adverse.", flag:"flagFrontRep"},
+        {t:"「都不要」：左右两端都不让", tFr:"« Ni-ni » : aucun désistement", e:{"leg": 1, "pop": -1}, o:"你守住了原则的面子；但被批「放任对手做大」。", oFr:"Principe sauf — accusé de laisser faire.", flag:"flagNiNi"}
+      ] },
+      { date:"2024 年 9 月",
+        dateFr:"Septembre 2024",
+        title:"离任·党团主席",
+        titleFr:"Départ, puis le groupe",
+        icon:"🔑",
+        text:"看守两个月后你交出钥匙，转身被本党议员推举为议会党团主席。第一次亮相，定什么调？",
+        textFr:"Deux mois d'affaires courantes, puis tu rends les clés — et les députés du parti te portent à la tête du groupe. Quel ton pour la première sortie ?",
+        choices:[
+        {t:"亮出党团自己的声音，为日后留出余地", tFr:"Donner une voix propre au groupe", e:{"med": 2, "pop": 1, "res": -2}, o:"你给党团立了块独立招牌，也给自己留了转身的空间；但被讥「刚卸任就开始切割」。", oFr:"Une voix autonome pour le groupe, et de la marge pour la suite — « à peine sorti, déjà la distance ».", flag:"flagLibre"},
+        {t:"忠诚继承者：守护共同遗产", tFr:"L'héritier loyal", e:{"res": 3, "med": -1, "pop": -1}, o:"你稳住了党内；但被绑在一艘正在下沉的船上。", oFr:"Le parti rassuré — toi amarré à un navire qui gîte."}
+      ],
+        oIf:[{e:{}, text:"交钥匙前的最后几天，你的看守政府赶在新议会第一次部长会议之前，把那部法的应用法令成批送进《官方公报》：7 月 17 日起，所有申请居留者必须签《尊重共和国原则合同》——自由、男女平等、世俗化；被拒庇护者，省里须在 15 天内下达离境令。", textFr:"Dans les derniers jours, ton gouvernement démissionnaire publie in extremis les décrets d'application : contrat d'engagement au respect des principes de la République pour tout demandeur de titre dès le 17 juillet ; obligation de quitter le territoire sous 15 jours pour les déboutés de l'asile."}] },
+      { date:"2024 年 12 月",
+        dateFr:"Décembre 2024",
+        title:"倒阁·当选党魁",
+        titleFr:"Censure, puis le parti",
+        icon:"🗳️",
+        text:"一届政府被两端联手推翻——多年未见的场面。同月，你当选党的秘书长。乱局里党团怎么站？",
+        textFr:"Un gouvernement censuré par les deux bouts — du jamais-vu depuis des décennies. Le même mois, te voilà secrétaire général du parti. Où placer le groupe dans le chaos ?",
+        choices:[
+        {t:"反对倒阁、扮演稳定锚", tFr:"S'opposer à la censure, jouer l'ancre", e:{"leg": 2, "res": 1, "pop": -2}, o:"你显得负责；但被绑死在不得人心的政府上。", oFr:"Responsable — soudé à un gouvernement impopulaire."},
+        {t:"借乱局突出自己的「替代方案」", tFr:"Avancer ta propre alternative", e:{"med": 3, "res": -2}, o:"你抢到了镜头；但被指「趁火打劫、不顾大局」。", oFr:"La lumière est à toi — « il profite de l'incendie »."}
+      ] },
+      { date:"2025 年 5 月",
+        dateFr:"Mai 2025",
+        title:"那部法的延长线",
+        titleFr:"Le prolongement de la loi",
+        icon:"🚩",
+        text:"你在总理任上委托撰写的一份关于宗教激进网络渗透的报告浮出水面，举国哗然。窗口就在眼前：要不要把那部移民法的《尊重共和国原则合同》逻辑接着往前推——「没人能说一个小女孩是自愿戴上的」？",
+        textFr:"Le rapport sur l'entrisme religieux radical que tu avais commandé à Matignon refait surface. La fenêtre est là : prolonger la logique du contrat d'engagement républicain — « personne ne peut dire qu'une fillette se voile par choix » ?",
+        choices:[
+        {t:"全套推出：公共场所禁 15 岁以下戴头巾 + 新设「强迫戴巾罪」", tFr:"Tout présenter : interdiction aux moins de 15 ans + délit de contrainte", e:{"med": 3, "pop": 1, "leg": -2}, o:"你抢下了秩序议题；但极右当场大笑「这抄的是我们的纲领」，自家温和派元老公开保留，左翼斥之违宪。", oFr:"Le terrain de l'ordre est à toi — l'extrême droite ricane « c'est notre programme », tes modérés émettent des réserves, la gauche crie à l'inconstitutionnalité.", flag:"flagVoile"},
+        {t:"只推「强迫戴巾罪」，不碰公共场所禁令", tFr:"Le seul délit de contrainte", e:{"leg": 2, "med": -1}, o:"路子稳、合宪性更稳；但被讥「点了火又不敢添柴」。", oFr:"Plus solide juridiquement — « il allume le feu sans oser souffler dessus »."},
+        {t:"报告收进抽屉，弹药留到大选年", tFr:"Garder le rapport pour plus tard", e:{"res": 1, "med": -2}, o:"你留了后手；可报告漏给了媒体，被批「自己点的题不敢接」。", oFr:"Munitions gardées — mais le rapport fuite : « il esquive son propre sujet »."}
+      ] },
+      { date:"2025 年 9 月",
+        dateFr:"Septembre 2025",
+        title:"信任投票之秋",
+        titleFr:"L'automne de la confiance",
+        icon:"🍂",
+        text:"又一任总理把预算紧缩绑上信任投票，惨败下台，一年里政府数度更迭。作为党魁，你站哪？",
+        textFr:"Un Premier ministre lie la rigueur à un vote de confiance — et tombe. Plusieurs gouvernements en un an. Où te places-tu ?",
+        choices:[
+        {t:"背书紧缩路线、担起「责任」之名", tFr:"Endosser la rigueur", e:{"leg": 3, "pop": -3}, o:"「成年人」的形象立住了；但你替不得人心的紧缩背了书，民意流失。", oFr:"L'adulte dans la pièce — qui paie la rigueur au prix fort.", flag:"flagRigueur"},
+        {t:"拒绝背书、要求换方法", tFr:"Refuser d'endosser, exiger une autre méthode", e:{"pop": 2, "leg": -2, "res": -1}, o:"你护住了民意；但被批「只会拆台、拿不出方案」。", oFr:"L'opinion préservée — « critique sans alternative ».", flag:"flagDistance"}
+      ] },
+      { date:"2025 年 10 月",
+        dateFr:"Octobre 2025",
+        title:"党内竞争·腹背受制",
+        titleFr:"Rivalités internes",
+        icon:"🗡️",
+        text:"你刚当上党魁，正为 2027 铺路。同阵营里本就各怀心思、山头林立。这天，一位分量很重、还掌着要害部委的人物，在直播里宣布退党，转身把矛头对准你：\n«Il faut arrêter les jeux partisans qui fatiguent les Français.»\n必须停止这些让法国人疲惫的党派游戏。",
+        textFr:"À peine élu à la tête du parti, un poids lourd encore au gouvernement annonce en direct son départ — et te vise : « Il faut arrêter les jeux partisans qui fatiguent les Français. »",
+        choices:[
+        {t:"正面顶回去：「有人不是不想早，是不敢早」", tFr:"Répondre frontalement", e:{"med": 3, "pop": 1, "res": -2}, o:"镜头上你占了上风；但「分裂阵营」的标签也更牢地贴上你。", oFr:"L'image est pour toi — l'étiquette de diviseur aussi."},
+        {t:"不接茬、只谈团结，走自己的节奏", tFr:"Ne pas relever, parler d'unité", e:{"leg": 2, "med": -2}, o:"你显得稳重；但镜头里他咄咄、你退让，气势上吃了亏。", oFr:"Posé — mais à l'image, c'est lui qui attaque."},
+        {t:"反问一句：「那你到底支持谁？」", tFr:"Retourner la question : « Qui soutenez-vous ? »", e:{"med": 1, "pop": -1}, o:"你把球踢回去；但他笑而不答，你也没占到便宜。", oFr:"La balle revient — il sourit sans répondre."}
+      ] },
+      { date:"2026 年 1 月",
+        dateFr:"Janvier 2026",
+        title:"定位之冬",
+        titleFr:"L'hiver du positionnement",
+        icon:"❄️",
+        text:"2027 倒计时。你手握党机器，开始铺自己的路。三种造势摆在桌上，精力只够主攻一种。",
+        textFr:"Compte à rebours vers 2027. L'appareil est à toi. Trois manières d'occuper le terrain — une seule énergie.",
+        choices:[
+        {t:"出版一本宣言之书", tFr:"Publier un livre-manifeste", e:{"leg": 3, "med": -1, "pop": -1}, o:"「思想者」的招牌立起来了；但耗时，且被讥「光说不练」。", oFr:"Le penseur s'affiche — « des mots, pas des actes ».", flag:"flagLivre"},
+        {t:"百城倾听巡回（只听不说自己）", tFr:"Une tournée d'écoute, cent villes", e:{"pop": 2, "res": 2, "med": -2}, o:"地方人情和亲民形象攒下了；但慢，也不抓眼球。", oFr:"Du lien, de la proximité — sans éclat."},
+        {t:"黄金时段电视马拉松", tFr:"Le marathon des prime time", e:{"med": 4, "leg": -2}, o:"声量瞬间拉满；但被指「老一套作秀、没新意」。", oFr:"Le volume au maximum — « du déjà-vu »."}
+      ],
+        oIf:[{flag:"flagLivre", e:{}, text:"出版社把日子定在 4 月 23 日。", textFr:"L'éditeur fixe la date : le 23 avril."}, {flag:"flagVoile", e:{}, text:"你点的那个议题没等你：12 月，秩序右翼把自己版本的「未成年人禁巾」案塞进了议程，开年就审——逼所有人就「你的主张、别人的文本」表态。", textFr:"Ton sujet ne t'a pas attendu : en décembre, la droite de l'ordre a déposé sa propre proposition sur le voilement des mineures, examinée dès janvier."}] },
+      { date:"2026 年 2 月",
+        dateFr:"Février 2026",
+        title:"里昂的二月",
+        titleFr:"Février à Lyon",
+        icon:"🕯️",
+        text:"一名 23 岁活动人士在里昂一场集会外缘被围殴致死，举国震动，市政选战骤然变质。每个阵营都在抢这具遗体的叙事。",
+        textFr:" en marge d'un rassemblement à Lyon. Le pays vacille ; chaque camp dispute le récit.",
+        choices:[
+        {t:"全国团结讲话：暴力不分阵营", tFr:"Un discours d'unité nationale", e:{"leg": 4, "pop": 1, "med": -1}, o:"你立住「总统级」高度；但被两端同时嫌「和稀泥」。", oFr:"La hauteur présidentielle — « tiède » pour les deux bouts."},
+        {t:"秩序转向：把解散涉案团体提上议程", tFr:"Mettre la dissolution des groupes à l'agenda", e:{"med": 3, "pop": 2, "leg": -2}, o:"你抢到秩序议题；但被批「消费死亡、火上浇油」。", oFr:"Le terrain de l'ordre est à toi — « récupération », dit-on.", flag:"flagOrdre26"},
+        {t:"点名谴责政治消费死亡", tFr:"Dénoncer la récupération politique", e:{"med": 2, "pop": -2}, o:"你占住道德高地；但被指「借机攻击对手、也在消费」。", oFr:"La hauteur morale — accusé du même travers."}
+      ] },
+      { date:"2026 年 3 月",
+        dateFr:"Mars 2026",
+        title:"市政第一轮",
+        titleFr:"Municipales, premier tour",
+        icon:"🗳️",
+        text:"3 月 15 日第一轮在即，全国约 3.5 万市镇。你那块近郊选区在等一个答案：下不下场？",
+        textFr:"Premier tour le 15 mars, 35 000 communes. Ta banlieue attend une réponse : y vas-tu ?",
+        choices:[
+        {t:"亲自领衔家乡名单", tFr:"Conduire la liste chez toi", e:{"res": 2, "leg": 2, "pop": -1}, o:"你押上自己的名字下场；本地老对手立刻把这场选举说成「对你的全民公投」。", oFr:"Ton nom sur la liste — l'adversaire local en fait un référendum sur toi."},
+        {t:"全国助选巡回、扶持盟友", tFr:"La tournée nationale de soutien", e:{"res": 3, "med": 2, "leg": -1}, o:"你广结人情换 2027 支持；但自己没有一座城背书。", oFr:"Des dettes de gratitude partout — aucune ville à ton nom."},
+        {t:"专注全国、地方交给盟友", tFr:"Tout au national, le local aux alliés", e:{"med": 1, "res": -2}, o:"你集中了火力；但被讥「连自己的城都不要了」。", oFr:"Concentré — « il a abandonné sa ville »."}
+      ],
+        oIf:[{e:{"res": 2}, text:"你的底牌不是地盘，是一盘换子棋：顶住高层「首轮就支持热门市长人选」的指令，把首都首轮的支持押给友党领跑人，换对方在两座关键城市撤名单让路、护住自家候选人；第二轮再借合并这根杠杆，把自家人塞进那张热门名单——换来的席位，足够在首都议会单独成团。", textFr:"Ton atout n'est pas un fief, c'est un jeu d'échanges : tu résistes à la consigne d'en haut de rallier d'emblée la favorite de la capitale ; ton soutien de premier tour va au chef de file allié, contre le retrait de ses listes dans deux villes clés ; au second tour, la fusion te sert de levier pour imposer les tiens sur la liste de la favorite — assez d'élus pour former ton propre groupe au conseil de la capitale."}],
+        muni:"t1" },
+      { date:"2026 年 3 月",
+        dateFr:"Mars 2026",
+        title:"两轮之间",
+        titleFr:"L'entre-deux-tours",
+        icon:"⚖️",
+        text:"第一轮开票：投票率回升，多数市镇一轮定局，国民阵营地方网络坐实，激进左翼多城突破。你所在战场进入第二轮。",
+        textFr:"Premier tour : participation en hausse, la plupart des communes pliées d'emblée, le bloc national enraciné, la gauche radicale perce. Ton front va au second tour.",
+        choices:[
+        {t:"与温和名单合并", tFr:"Fusionner avec la liste modérée", e:{"res": 2, "leg": 1, "pop": -1}, o:"你稳住了席位；但被指「和建制媾和、丢了棱角」。", oFr:"Les sièges sécurisés — « il s'est rangé »."},
+        {t:"三角对决硬顶到底", tFr:"Tenir la triangulaire", e:{"pop": 2, "med": 1, "res": -2}, o:"你姿态硬气；但分票送对手上位的风险全押上。", oFr:"La fermeté — au risque d'offrir la mairie à l'adversaire."},
+        {t:"再组共和阵线对抗国民阵营", tFr:"Refaire le front républicain", e:{"leg": 2, "pop": -2}, o:"你占住道义；但 2024 那张截图又被翻出来。", oFr:"La morale pour toi — la capture d'écran de 2024 ressort.", flag:"flagFrontRep2"}
+      ],
+        surprise:"municipales2026",
+        muni:"t2" },
+      { date:"2026 年 5 月",
+        dateFr:"Mai 2026",
+        title:"最后一步",
+        titleFr:"Le dernier pas",
+        icon:"🏁",
+        text:"市政尘埃落定，2027 抢跑开始。何时何地、以何种姿态入场——还是再等等？",
+        textFr:"Les municipales sont pliées ; la course à 2027 s'ouvre. Où, quand, comment entrer — ou attendre encore ?",
+        choices:[
+        {t:"乡村小镇宣布：与居民对谈中入场", tFr:"Se déclarer dans un village, en dialogue", e:{"pop": 3, "med": 2, "leg": -1}, o:"「乡村小镇、与居民对谈」的画面新鲜又亲民；但对手第一时间咬住你的年纪——「娃娃脸」「当总统还太嫩」，连下乡也被讥成「摆拍」。", oFr:"L'image est neuve et proche — et l'adversaire mord à l'âge : « trop jeune pour l'Élysée », « mise en scène »."},
+        {t:"巴黎大会堂万人造势", tFr:"Le grand meeting parisien", e:{"med": 4, "res": 1, "pop": -2}, o:"万人造势声势浩大；但坐实了「建制候选人」的标签，对手照样拿「太年轻、没历练」做文章。", oFr:"La démonstration de force — étiquette « candidat du système », et toujours « trop jeune »."},
+        {t:"再等一季、秋天入场", tFr:"Attendre l'automne", e:{"leg": 1, "med": -3}, o:"你留出了观望；但被对手抢跑、错过窗口，「年轻人沉不住气、还是沉得太久」两头都有人说。", oFr:"Tu observes — pendant que d'autres partent ; « impatient » hier, « trop attentiste » aujourd'hui."}
+      ],
+        decl:true }
+    ]
+  },
+  veteran: {
+    name: "轨迹 B ·「宦海沉浮」", nameFr: "Au long cours", color: "var(--rouge)", avatar: "B",
+    startStats: { pop: 28, res: 44, leg: 36, med: 24 },
+    context: "",
+    contextFr: "",
+    turns: [
+      { date:"2012 年 5 月",
+        dateFr:"Mai 2012",
+        title:"败选之春",
+        titleFr:"Le printemps de la défaite",
+        icon:"🍂",
+        text:"右翼失去爱丽舍，你的部长任期随之结束。43 岁，外省一个议员席位是你仅剩的阵地。（序章：2012–2016 压缩为三回合）",
+        textFr:"La droite perd l'Élysée ; ton ministère avec. À 43 ans, il te reste un siège de député en province.",
+        choices:[
+        {t:"写书立论，打造「思想者」形象", tFr:"Écrire, se poser en intellectuel", e:{"leg": 4, "med": 1, "res": -2}, o:"你立起了「有思想的政治家」招牌；但党机器那头的实权，被别人一点点攥走。", oFr:"Le penseur s'installe — pendant que d'autres prennent l'appareil.", flag:"flagPlume"},
+        {t:"深耕党机器，准备夺权", tFr:"Investir l'appareil du parti", e:{"res": 4, "leg": -1, "med": -1}, o:"你在党内织密了关系网；但只被看作「操盘手」，缺了高度。", oFr:"Le réseau se densifie — sans hauteur de vue reconnue.", flag:"flagAppareil"},
+        {t:"两手抓：又写书、又经营党内人脉", tFr:"Mener les deux de front", e:{"leg": 1, "res": 1, "med": 1, "pop": -1}, o:"两边都沾；但精力摊薄，哪边都没做到顶。", oFr:"Sur les deux fronts — au sommet d'aucun.", flag:"flagBothB"}
+      ] },
+      { date:"2014 年 11 月",
+        dateFr:"Novembre 2014",
+        title:"党魁选战之后",
+        titleFr:"Après le congrès",
+        icon:"🎯",
+        text:"前总统回归竞逐党魁，所有人劝你别挡路。你执意参选，拿下近三成选票——败了，但全党记住了你。",
+        textFr:"L'ancien président revient prendre le parti. On te conseille de t'écarter ; tu te présentes et frôles les trente pour cent. Battu — mais identifié.",
+        choices:[
+        {t:"高调承认失败，宣布「下一次」", tFr:"Assumer la défaite, promettre la suite", e:{"med": 3, "pop": 2, "res": -1}, o:"29.18% 的票让你一夜跻身党内不可忽视者；但你也把那位前总统得罪成了强敌。", oFr:"29,18 % : te voilà incontournable — et l'ancien président, ennemi durable."},
+        {t:"立刻归队，换取位置", tFr:"Rentrer dans le rang", e:{"res": 3, "leg": -2}, o:"你换来了体制内的位置；但「差点赢」的光环，自己亲手按灭了。", oFr:"Une place dans la maison — l'aura du presque-vainqueur éteinte de ta main."}
+      ] },
+      { date:"2016 年 11 月",
+        dateFr:"Novembre 2016",
+        title:"右翼初选",
+        titleFr:"La primaire de la droite",
+        icon:"📉",
+        text:"右翼初选：你得票 2.4%，七人中第五。同月对岸大选爆冷、邻国深陷脱欧——旧世界在崩塌，你在谷底。",
+        textFr:"Primaire : 2,4 %, cinquième sur sept. Le même mois, l'Amérique bascule, le voisin s'enlise dans son divorce. Le vieux monde craque ; toi, tu touches le fond.",
+        choices:[
+        {t:"承认惨败，闭关反思", tFr:"Encaisser, se retirer pour réfléchir", e:{"leg": 3, "med": -1}, o:"你赢得了「诚实」口碑，也给自己留了重整的时间；但短期彻底淡出视野。", oFr:"L'honnêteté saluée — et l'éclipse totale."},
+        {t:"立刻为胜者站台，保住人脉", tFr:"Se rallier au vainqueur", e:{"res": 3, "leg": -2}, o:"你保住了人脉与位置；但被讥「输了就忙着抱大腿」。", oFr:"Réseaux préservés — « battu, déjà rallié »."}
+      ] },
+      { date:"2017 年 5 月",
+        dateFr:"Mai 2017",
+        title:"跨营的电话",
+        titleFr:"L'appel d'en face",
+        icon:"☎️",
+        text:"新总统当选，给你打来电话：经济中枢、部长之位。接受即被老党开除。一生的赌局。",
+        textFr:"Le nouveau président t'appelle : Bercy. Accepter, c'est l'exclusion du parti. Le pari d'une vie.",
+        choices:[
+        {t:"接受，并公开论述「超越左右」", tFr:"Accepter et théoriser le dépassement", e:{"leg": 3, "med": 3, "res": -3}, o:"你入主经济中枢，登上更大舞台；但老党的「叛徒」标签从此焊死，再回不去。", oFr:"Bercy est à toi — et « traître » soudé à ton nom.", flag:"flagCross"},
+        {t:"拒绝，留在右翼等 2022", tFr:"Refuser, attendre 2022 à droite", e:{"res": 3, "leg": 1, "med": -2}, o:"你守住了老党的忠诚；但错过一整个时代，眼睁睁看别人上桌。", oFr:"Fidèle — et spectateur d'une époque."}
+      ] },
+      { date:"2017 年 9 月",
+        dateFr:"Septembre 2017",
+        title:"富人税之秋",
+        titleFr:"L'automne de l'ISF",
+        icon:"💶",
+        text:"劳动法改革与财产税改革同季落地，「富人的总统」标签开始发酵。你是经济门面。",
+        textFr:"Ordonnances travail et réforme de l'ISF la même saison ; « président des riches » s'installe. Tu es la vitrine économique.",
+        choices:[
+        {t:"理直气壮捍卫供给侧逻辑", tFr:"Assumer la logique de l'offre", e:{"leg": 3, "med": 1, "pop": -3}, o:"你立住了「有信念」的形象；但「富人代言人」的帽子也牢牢扣上。", oFr:"Des convictions affichées — et le chapeau d'avocat des riches.", flag:"flagOffre"},
+        {t:"主打中产减税的故事", tFr:"Raconter la baisse d'impôts des classes moyennes", e:{"pop": 3, "leg": -1}, o:"你抢回了一点中产好感；但被讥「避重就轻、不敢认账」。", oFr:"Les classes moyennes écoutent — « il esquive l'essentiel »."}
+      ] },
+      { date:"2018 年 11 月",
+        dateFr:"Novembre 2018",
+        title:"黄背心与钱袋",
+        titleFr:"Les ronds-points et la caisse",
+        icon:"🧥",
+        text:"环岛起火，诉求直指购买力。让利的决定在爱丽舍，但钱从哪来、赤字红线守不守，要你给答案。",
+        textFr:"Les ronds-points s'embrasent, le pouvoir d'achat au cœur. Les concessions se décident à l'Élysée — mais le financement et la ligne du déficit, c'est toi.",
+        choices:[
+        {t:"放出百亿让利止血", tFr:"Lâcher dix milliards pour éteindre le feu", e:{"pop": 4, "res": 1, "leg": -2}, o:"街头的火暂时压住了；但这一百亿，记进了日后那本债务总账。", oFr:"Le feu retombe — dix milliards de plus au grand livre de la dette.", flag:"flagLargesse"},
+        {t:"守住赤字红线，硬扛", tFr:"Tenir la ligne du déficit", e:{"leg": 3, "pop": -4}, o:"你守住了财政纪律；但被骂「见死不救」，民意反噬。", oFr:"La discipline tenue — « sourd à la colère »."}
+      ] },
+      { date:"2019 年 7 月",
+        dateFr:"Juillet 2019",
+        title:"数字税对决",
+        titleFr:"La taxe numérique",
+        icon:"🌐",
+        text:"你推动对科技巨头征数字税，对岸威胁报复法国酒类与奢侈品。退，还是顶？",
+        textFr:"Ta taxe sur les géants du numérique ; en face, menaces de représailles sur les vins et le luxe. Plier ou tenir ?",
+        choices:[
+        {t:"顶住威胁，欧洲主权优先", tFr:"Tenir, au nom de la souveraineté", e:{"leg": 4, "med": 2, "res": -2}, o:"你赢得「主权斗士」形象；但跨大西洋的报复账单晚到不会缺席。", oFr:"Le champion de la souveraineté — la facture transatlantique suivra.", flag:"flagGafa"},
+        {t:"换 OECD 多边框架，暂缓征收", tFr:"Basculer vers le cadre OCDE", e:{"res": 3, "leg": -1}, o:"你换来多边框架的体面退场；但被讥「雷声大、雨点小」。", oFr:"Une sortie honorable — « beaucoup de bruit pour rien »."}
+      ] },
+      { date:"2020 年 3 月",
+        dateFr:"Mars 2020",
+        title:"「不惜一切代价」",
+        titleFr:"« Quoi qu'il en coûte »",
+        icon:"🦠",
+        text:"经济停摆。总统在电视讲话里说出那四个字——«quoi qu'il en coûte»（不惜一切代价）。把这四个字变成钱的，是你：部分失业、担保贷款、行业基金。这套机器将定义你，也将追债于你。",
+        textFr:"L'économie s'arrête. Le Président prononce les mots — « quoi qu'il en coûte ». C'est toi qui les transformes en argent : chômage partiel, prêts garantis, fonds sectoriels.",
+        choices:[
+        {t:"全面救助，不设上限", tFr:"Soutenir sans plafond", e:{"pop": 4, "res": 2, "leg": -1}, o:"你接住了停摆的经济，企业活了下来；但那本账单，2025 年寄到你门上。", oFr:"L'économie tient, les entreprises survivent — la facture arrivera en 2025.", flag:"flagWhatever"},
+        {t:"定向救助+落日条款", tFr:"Cibler, avec clauses d'extinction", e:{"leg": 3, "pop": -1}, o:"你守住一道财政闸门；但被嫌「抠门、救得不够」。", oFr:"Une écluse budgétaire tenue — « trop chiche »."}
+      ],
+        surprise:"covid" },
+      { date:"2020 年 7 月",
+        dateFr:"Juillet 2020",
+        title:"欧洲共同债",
+        titleFr:"L'emprunt commun",
+        icon:"🇪🇺",
+        text:"布鲁塞尔谈判 7500 亿复苏基金。南方要共同举债，「节俭四国」反对。你站哪边？",
+        textFr:"Bruxelles négocie 750 milliards. Le Sud veut la dette commune, les « frugaux » s'y opposent. Ton camp ?",
+        choices:[
+        {t:"力推共同举债", tFr:"Pousser la dette commune", e:{"leg": 3, "res": 3, "pop": -1}, o:"你成了「欧洲一体化」功臣；但国内被批「替别人的债买单」。", oFr:"Artisan de l'Europe — « il paie les dettes des autres », dit-on chez toi.", flag:"flagDetteEU"},
+        {t:"要求严格附带条件", tFr:"Exiger des conditions strictes", e:{"leg": 2, "res": -1}, o:"你护住了国内的钱袋；但被盟友嫌「小气、拖后腿」。", oFr:"La caisse protégée — les alliés grincent."}
+      ] },
+      { date:"2021 年 10 月",
+        dateFr:"Octobre 2021",
+        title:"通胀的第一声",
+        titleFr:"Les premiers signes",
+        icon:"📈",
+        text:"能源价格开始爬升，央行说「暂时性」。你公开怎么定调？",
+        textFr:"L'énergie grimpe ; la banque centrale dit « transitoire ». Quel ton en public ?",
+        choices:[
+        {t:"提前预警：通胀可能扎根", tFr:"Alerter : l'inflation peut s'installer", e:{"leg": 3, "med": 1, "pop": -2}, o:"事后看你料得准，攒下「清醒者」口碑；但当下被嫌「唱衰、制造恐慌」。", oFr:"Lucide avec le recul — « oiseau de mauvais augure » sur le moment."},
+        {t:"安抚优先：定调「暂时性」", tFr:"Rassurer : « transitoire »", e:{"pop": 2, "med": 1, "leg": -2}, o:"你稳住了短期人心；但若判断错了，这段录像会在 2022 被人放出来。", oFr:"Le calme préservé — la vidéo ressortira si tu t'es trompé.", flag:"flagDeny"}
+      ] },
+      { date:"2022 年 4 月",
+        dateFr:"Avril 2022",
+        title:"连任经济牌",
+        titleFr:"La carte économique",
+        icon:"🗳️",
+        text:"连任战。你的卖点：失业率二十年最低、再工业化开局。对手的卖点：你任内的物价与债务。",
+        textFr:"Campagne de réélection. Ton bilan : chômage au plus bas en vingt ans, réindustrialisation. Le leur : les prix et la dette.",
+        choices:[
+        {t:"数据轰炸：用就业数字碾压", tFr:"Marteler les chiffres de l'emploi", e:{"leg": 3, "med": 2, "pop": -1}, o:"你立住「实绩」形象；但被讥「数字漂亮、菜价不会骗人」。", oFr:"Le bilan s'impose — « les courbes ne font pas les courses »."},
+        {t:"购买力优先叙事+支票", tFr:"Pouvoir d'achat et chèques", e:{"pop": 4, "leg": -2}, o:"你抢回购买力议题；但又往那本债务账上添了一笔。", oFr:"Le terrain du pouvoir d'achat repris — une ligne de plus au grand livre.", flag:"flagLargesse"}
+      ] },
+      { date:"2022 年 10 月",
+        dateFr:"Octobre 2022",
+        title:"价格盾 vs 迷你预算",
+        titleFr:"Bouclier contre mini-budget",
+        icon:"🛡️",
+        text:"能源危机顶点。对岸一份无融资的减税方案 49 天就葬送了一位首相（其政府上任 49 天即垮）；你的「价格盾」则花数百亿压住电价。两种答案，市场只认一种。",
+        textFr:"Pic de la crise énergétique. Outre-Manche, un budget non financé a coûté son poste à une Première ministre en 49 jours ; ton bouclier tarifaire, lui, contient les prix à coups de milliards.",
+        choices:[
+        {t:"延长价格盾（保民意、加债务）", tFr:"Prolonger le bouclier", e:{"pop": 4, "res": 1, "leg": -1}, o:"电价压住、民意保住；但债务的雪球又滚大一圈。", oFr:"Les prix contenus — la boule de neige grossit.", flag:"flagWhatever"},
+        {t:"逐步退出+定向补贴", tFr:"Sortie progressive, aides ciblées", e:{"leg": 3, "pop": -3}, o:"你向市场证明了财政可信；但退场太早，民意挨冻。", oFr:"Les marchés rassurés — les foyers dans le froid."}
+      ] },
+      { date:"2023 年 3 月",
+        dateFr:"Mars 2023",
+        title:"退休改革",
+        titleFr:"La réforme des retraites",
+        icon:"🔥",
+        text:"64 岁改革靠宪法工具通过，街头沸腾。你负责论证「不改、财政撑不住」。",
+        textFr:"Les 64 ans passent au forceps constitutionnel ; la rue gronde. À toi l'argument : « sans réforme, les comptes lâchent ».",
+        choices:[
+        {t:"财政论证一线扛旗", tFr:"Porter l'argument en première ligne", e:{"leg": 3, "med": 2, "pop": -4}, o:"你成了改革的财政代言人，立住「担当」；但民意的怒火直接烧到你。", oFr:"Le visage budgétaire de la réforme — et la colère qui va avec."},
+        {t:"低调技术支持，避开镜头", tFr:"Soutien technique, loin des caméras", e:{"res": 2, "pop": -1}, o:"你避开了风口；但被嫌「关键时刻躲镜头」。", oFr:"À l'abri — « absent quand ça brûle »."}
+      ] },
+      { date:"2023 年 9 月",
+        dateFr:"Septembre 2023",
+        title:"偿债的秋天",
+        titleFr:"L'automne de la dette",
+        icon:"💳",
+        text:"利率飙升，偿债成本逼近教育预算。紧缩窗口开在今年，还是拖到大选后？",
+        textFr:"Les taux s'envolent ; la charge de la dette frôle le budget de l'école. Serrer maintenant — ou après la présidentielle ?",
+        choices:[
+        {t:"今年就开始结构性削减", tFr:"Couper dès cette année", e:{"leg": 4, "pop": -4}, o:"你立住财政强硬派的硬气；但削减直接砸民意。", oFr:"La rigueur assumée — l'opinion encaisse."},
+        {t:"渐进路径，避开社会爆点", tFr:"Étaler, éviter l'explosion sociale", e:{"pop": 2, "res": 1, "leg": -2}, o:"你避开了社会爆点；但拖延的利息，要用政治信用来还。", oFr:"L'explosion évitée — les intérêts du report se paieront en crédit politique.", flag:"flagDelay"}
+      ] },
+      { date:"2024 年 4 月",
+        dateFr:"Avril 2024",
+        title:"手里的真实数字",
+        titleFr:"Les vrais chiffres",
+        icon:"✉️",
+        text:"税收骤降，赤字将大幅脱轨，而你手里有真实数字。给最高层写一封「机密」警报信？公开拉响警报？还是按程序沉默？",
+        textFr:"Les recettes plongent, le déficit déraille — et tu détiens les vrais chiffres. Une lettre « secrète » au sommet ? L'alerte publique ? Ou le silence des procédures ?",
+        choices:[
+        {t:"写机密警报信，要求紧急修正案", tFr:"La lettre secrète, exiger un collectif budgétaire", e:{"leg": 2, "res": 1}, o:"你留下了「我提醒过」的书面证据；但信被压下、赤字照样脱轨——这封信迟早会泄。", oFr:"La preuve écrite existe — la lettre est enterrée, le déficit déraille quand même.", flag:"flagLetter"},
+        {t:"公开警报，承担「制造恐慌」骂名", tFr:"Alerter publiquement", e:{"leg": 4, "med": 2, "res": -4}, o:"你赢得「敢说真话」的清誉；但当下被骂「捅刀、制造恐慌」。", oFr:"Le courage salué — « il poignarde, il affole ».", flag:"flagPublic"},
+        {t:"按程序内部上报，不留痕", tFr:"Suivre les canaux, sans trace", e:{"res": 2, "leg": -2}, o:"你什么把柄都没留；但沉默本身，日后也是一种立场。", oFr:"Aucune prise — le silence aussi se jugera.", flag:"flagSilent"}
+      ] },
+      { date:"2024 年 6 月",
+        dateFr:"Juin 2024",
+        title:"解散之夜",
+        titleFr:"Le soir de la dissolution",
+        icon:"🌪️",
+        text:"欧洲选举惨败，总统闪电解散议会。你在任七年的经济中枢可能随之陪葬。当晚你的姿态？",
+        textFr:"Défaite aux européennes ; dissolution éclair. Tes sept années à Bercy peuvent y passer. Ce soir-là, quelle posture ?",
+        choices:[
+        {t:"公开质疑这场赌博", tFr:"Questionner publiquement le pari", e:{"med": 3, "pop": 2, "res": -3}, o:"你赢得「敢言」的共情；但与总统的裂痕公开化。", oFr:"Le franc-parler salué — la fissure avec le Président est publique.", flag:"flagSpoke"},
+        {t:"闭口执行，稳住市场", tFr:"Exécuter en silence, rassurer les marchés", e:{"leg": 2, "res": 2, "med": -2}, o:"你稳住市场、保住忠诚；但被看作「沉默的执行者」。", oFr:"Les marchés tenus — l'exécutant silencieux.", flag:"flagLoyal"}
+      ],
+        surprise:"dissolution" },
+      { date:"2024 年 9 月",
+        dateFr:"Septembre 2024",
+        title:"七年之后",
+        titleFr:"Sept ans après",
+        icon:"🗝️",
+        text:"你离开经济中枢——第五共和国该职在任最久的纪录。告别演讲怎么定调？",
+        textFr:"Tu quittes Bercy — record de longévité de la Ve à ce poste. Quel ton pour les adieux ?",
+        choices:[
+        {t:"高调清点政绩（就业、再工业化）", tFr:"Dresser le bilan, chiffres à l'appui", e:{"med": 3, "leg": 1, "pop": -2}, o:"你把「实绩」钉进历史；但被讥「只报喜、不提那本账」。", oFr:"Le bilan gravé — « et la dette, monsieur ? »", flag:"flagBilan"},
+        {t:"克制谢幕，把债务问题留白", tFr:"Sortir sobrement, laisser la dette en blanc", e:{"leg": 2, "res": 1, "med": -2}, o:"你显得有分寸；但也错过了为自己定调的最后机会。", oFr:"Élégant — la dernière occasion de cadrer ton récit s'envole."}
+      ] },
+      { date:"2024 年 9 月末",
+        dateFr:"Fin septembre 2024",
+        title:"海外的邀约",
+        titleFr:"L'invitation de l'étranger",
+        icon:"🏔️",
+        text:"国外一所理工名校邀你执教、著书立说；或留在巴黎的圈子里随时待命。",
+        textFr:"Une grande école étrangère t'offre une chaire et le temps d'écrire ; ou rester à Paris, disponible.",
+        choices:[
+        {t:"出国执教+写作（隔岸观火）", tFr:"Enseigner et écrire, à distance", e:{"leg": 3, "pop": 1, "res": -2, "med": -2}, o:"你换来思考与体面；但「逃去山上数钱」的攻击词已为你备好。", oFr:"Le recul et la dignité — « parti compter ses sous dans les Alpes », disent-ils déjà.", flag:"flagSwiss"},
+        {t:"留守巴黎，智库+专栏", tFr:"Rester à Paris : think tank et tribunes", e:{"res": 3, "med": 1, "leg": -1}, o:"你留在牌桌边；但也困在巴黎的是非里。", oFr:"À table — et dans la mêlée parisienne."}
+      ] },
+      { date:"2025 年初",
+        dateFr:"Début 2025",
+        title:"芯片巨头的邀约",
+        titleFr:"Le géant des puces",
+        icon:"💼",
+        text:"一家欧洲芯片巨头邀你出任战略顾问，报酬优渥。前部长的人脉，正是他们要买的。",
+        textFr:"Un géant européen des semi-conducteurs t'offre un poste de conseiller, grassement payé. Ce qu'ils achètent : ton carnet d'adresses.",
+        choices:[
+        {t:"接受（保留随时退出条款）", tFr:"Accepter, avec clause de sortie", e:{"res": 3, "leg": -2, "med": -1}, o:"钱与人脉到手；但议会调查委员会读得懂「利益冲突」四个字。", oFr:"L'argent et le réseau — et « conflit d'intérêts » en toutes lettres pour une commission.", flag:"flagCorp"},
+        {t:"婉拒，保持公职洁癖", tFr:"Décliner, par hygiène publique", e:{"leg": 3, "res": -1}, o:"你守住了清誉；但也放掉了一笔实在的资源。", oFr:"La réputation intacte — la ressource envolée."}
+      ] },
+      { date:"2025 年 4 月",
+        dateFr:"Avril 2025",
+        title:"继任者陷僵局",
+        titleFr:"Les successeurs dans l'impasse",
+        icon:"🕳️",
+        text:"预算僵局把继任者们拖进泥潭。媒体排队请你开炮。",
+        textFr:"L'impasse budgétaire engloutit tes successeurs. Les rédactions font la queue pour te faire tirer.",
+        choices:[
+        {t:"长文开炮：「我留下的不是这个」", tFr:"La tribune au vitriol", e:{"med": 4, "pop": 1, "res": -3}, o:"你抢回话语权；但被指「卸任就拆台、急着撇清」。", oFr:"La parole reprise — « à peine parti, déjà démolisseur ».", flag:"flagTacle"},
+        {t:"克制：只谈方法、不点名", tFr:"Parler méthode, sans nommer", e:{"leg": 3, "res": 1, "med": -1}, o:"你显得有格局；但存在感也淡了。", oFr:"De la hauteur — et moins de présence."}
+      ] },
+      { date:"2025 年 9 月",
+        dateFr:"Septembre 2025",
+        title:"信任崩塌",
+        titleFr:"La confiance s'effondre",
+        icon:"💥",
+        text:"总理把紧缩绑上信任投票，惨败下台。所有人都想起 2024 年春天那些数字——以及你当时说了什么、没说什么。",
+        textFr:"Le Premier ministre lie la rigueur à la confiance — et tombe. Tout le monde repense aux chiffres du printemps 2024, et à ce que tu as dit ou tu.",
+        choices:[
+        {t:"「我早就警告过」", tFr:"« J'avais prévenu »", e:{"leg": 2, "med": 2, "res": -2}, o:"你坐实「先知」人设；但被嫌「看热闹、不揽责」。", oFr:"Le prophète confirmé — « spectateur, jamais comptable »."},
+        {t:"拒绝马后炮，提出三点方案", tFr:"Refuser le procès rétrospectif, proposer", e:{"leg": 3, "res": 1, "pop": 1, "med": -1}, o:"你显得建设性；但风头不及一句「我早说过」响亮。", oFr:"Constructif — moins sonore qu'un « je l'avais dit »."}
+      ] },
+      { date:"2025 年 10 月",
+        dateFr:"Octobre 2025",
+        title:"一日部长",
+        titleFr:"Ministre d'un jour",
+        icon:"⏱️",
+        text:"深夜来电：新政府请你出山执掌国防系统。你深夜受命——次日清晨整个政府在组阁风暴中集体请辞。你创下第五共和国最短任期纪录。",
+        textFr:"Appel nocturne : la Défense. Nommé le soir — et au matin, le gouvernement entier démissionne dans la tourmente. Record de brièveté de la Ve.",
+        choices:[
+        {t:"自嘲化解：「史上最短，至少纪录是我的」", tFr:"L'autodérision : « au moins, le record est à moi »", e:{"pop": 3, "med": 3, "leg": -1}, o:"你那句自嘲很快传开，意外换来一批好感；但也有人嫌它不够庄重。", oFr:"La pique fait le tour — sympathie gagnée, gravité questionnée."},
+        {t:"冷面切割：归咎体制混乱", tFr:"Imputer le chaos institutionnel", e:{"leg": 2, "med": -1, "pop": -2}, o:"你撇清了责任；但被嫌「甩锅、不担当」。", oFr:"Dégagé de la faute — « il se défausse »."},
+        {t:"沉默蛰伏，等风暴过去", tFr:"Se taire, laisser passer", e:{"res": 2, "med": -3}, o:"你低调避过风头；但这记纪录还是挂在你名下。", oFr:"Discret — le record reste à ton nom."}
+      ] },
+      { date:"2025 年 11 月",
+        dateFr:"Novembre 2025",
+        title:"档案见光",
+        titleFr:"Les archives au jour",
+        icon:"📽️",
+        text:"一部电视调查纪录片翻出 2024 年春预算内幕：你当时知道什么、做了什么，一夜之间成为全国辩题。",
+        textFr:"Un documentaire d'enquête exhume les coulisses budgétaires du printemps 2024 : ce que tu savais, ce que tu as fait — débat national du jour au lendemain.",
+        choices:[
+        {t:"上同一家电视台正面应战", tFr:"Aller répondre sur la même chaîne", e:{"med": 3, "leg": 1, "pop": -1}, o:"你正面迎战，扳回一些主动；但也把火烧得更旺。", oFr:"L'initiative reprise — et le feu attisé."},
+        {t:"书面声明+公布时间线自证", tFr:"Communiqué et chronologie publiée", e:{"leg": 3, "med": -1}, o:"你用白纸黑字自证；但被嫌「躲镜头、不敢露面」。", oFr:"Les faits posés noir sur blanc — « il fuit les plateaux »."},
+        {t:"拒绝回应「电视审判」", tFr:"Refuser le « procès télévisé »", e:{"res": 1, "med": -3, "leg": -1}, o:"你拒绝被「电视审判」；但沉默被解读为心虚。", oFr:"Le cadre refusé — le silence lu comme un aveu."}
+      ] },
+      { date:"2026 年 1 月",
+        dateFr:"Janvier 2026",
+        title:"私营部门的又一道门",
+        titleFr:"Une autre porte du privé",
+        icon:"🚪",
+        text:"又一家跨国机构开出高价，请你出任高级顾问。钱是真的，「前部长替外资打工」的标签也是真的。",
+        textFr:"Une autre multinationale met le prix pour tes conseils. L'argent est réel ; l'étiquette « ex-ministre au service de l'étranger » aussi.",
+        choices:[
+        {t:"接受（限定不涉法国公共事务）", tFr:"Accepter, hors affaires publiques françaises", e:{"res": 2, "leg": -2}, o:"报酬到手；但限定条款挡不住听证会的提问。", oFr:"La rémunération tombe — les clauses n'arrêteront pas les questions.", flag:"flagUS"},
+        {t:"拒绝，转投欧洲智库", tFr:"Décliner, rejoindre un think tank européen", e:{"leg": 3, "res": -1}, o:"你保住体面，落脚欧洲智库；但少了那笔钱。", oFr:"La dignité sauve — sans le chèque."},
+        {t:"拒绝并公开理由（主权姿态）", tFr:"Décliner publiquement, au nom de la souveraineté", e:{"leg": 2, "med": 2, "pop": 1, "res": -2}, o:"你把拒绝变成一次主权表态，赢了声量；但也彻底关上这扇门。", oFr:"Le refus devient un acte — et la porte se ferme à jamais."}
+      ] },
+      { date:"2026 年 2 月",
+        dateFr:"Février 2026",
+        title:"里昂的二月",
+        titleFr:"Février à Lyon",
+        icon:"🕯️",
+        text:"一名 23 岁活动人士在里昂被围殴致死，举国震动，市政选战变质。作为「圈外长者」，各台都想要你一句话。",
+        textFr:" à Lyon. Le pays vacille. À l'« ancien hors du jeu », chaque plateau réclame un mot.",
+        choices:[
+        {t:"长者定调：哀悼优先，拒绝消费死亡", tFr:"La gravité de l'ancien : le deuil d'abord", e:{"leg": 4, "pop": 1, "med": -1}, o:"你立住「超然长者」的高度；但也被嫌「和稀泥」。", oFr:"La hauteur du sage — « tiède », disent les deux bouts."},
+        {t:"借势谈「国家权威衰弱」", tFr:"Parler de l'autorité de l'État", e:{"med": 3, "pop": 2, "leg": -2}, o:"你抢到秩序议题；但被批「消费死亡、火上浇油」。", oFr:"Le thème de l'ordre saisi — « récupération ».", flag:"flagRecup"},
+        {t:"保持沉默", tFr:"Se taire", e:{"res": 1, "med": -2}, o:"你避开是非；但「圈外人」的存在感又淡一分。", oFr:"Hors de la mêlée — et un peu plus hors du jeu."}
+      ] },
+      { date:"2026 年 3 月上旬",
+        dateFr:"Début mars 2026",
+        title:"无封地的市政季",
+        titleFr:"Municipales sans fief",
+        icon:"🗺️",
+        text:"3 月 15 日第一轮在即，你早已没有自己的市镇阵地。下注别人的城，还是干脆离场？",
+        textFr:"Premier tour le 15 mars — et plus aucun fief à toi. Miser sur les villes des autres, ou s'absenter ?",
+        choices:[
+        {t:"为二十座城的温和派候选人站台", tFr:"Soutenir vingt listes modérées", e:{"res": 3, "med": 2, "leg": -1}, o:"你广撒人情、换 2027 筹码；但摊得太开，没有一座城真正属于你。", oFr:"Des dettes de gratitude partout — aucune ville à ton nom."},
+        {t:"只挺三五个嫡系，深度投入", tFr:"Miser sur quelques fidèles", e:{"res": 2, "leg": 1, "med": -1}, o:"你押注嫡系、关系做深；但盘子小，声量有限。", oFr:"Des liens profonds — sur un petit périmètre."},
+        {t:"全程缺席（在国外讲学）", tFr:"S'absenter (cours à l'étranger)", e:{"leg": 1, "med": -3, "pop": -1}, o:"你彻底置身事外；但「连地方都不要了」的讥讽随之而来。", oFr:"Au-dessus de la mêlée — « il a tourné le dos au terrain »."}
+      ],
+        muni:"t1" },
+      { date:"2026 年 3 月中",
+        dateFr:"Mi-mars 2026",
+        title:"两轮之间",
+        titleFr:"L'entre-deux-tours",
+        icon:"⚖️",
+        text:"第一轮：投票率回升，95% 市镇一轮定局，国民阵营地方网络坐实，激进左翼多城突破。第二轮前，给不给「共和纪律」的公开指引？",
+        textFr:"Premier tour : participation en hausse, 95 % des communes pliées, le bloc national enraciné, la gauche radicale perce. Donner — ou non — une consigne républicaine ?",
+        choices:[
+        {t:"公开呼吁阻挡国民阵营（哪怕利好左翼）", tFr:"Appeler au barrage, même au profit de la gauche", e:{"leg": 3, "pop": -2}, o:"你占住道义高地；但这句话会被截图存到 2027。", oFr:"La hauteur morale — et une capture d'écran pour 2027.", flag:"flagFrontRep"},
+        {t:"「选民自有判断」，不给指引", tFr:"« Les électeurs jugeront »", e:{"pop": 2, "leg": -1}, o:"你显得尊重选民；但被批「该担当时和稀泥」。", oFr:"Respect affiché — « il se défile au moment de trancher »."},
+        {t:"逐城表态，拒绝一刀切", tFr:"Au cas par cas", e:{"leg": 2, "res": 1, "med": -1}, o:"你显得务实细致；但被嫌「滑头、不敢给准话」。", oFr:"Du sur-mesure — « trop habile pour être franc »."}
+      ],
+        surprise:"municipales2026",
+        muni:"t2" },
+      { date:"2026 年 4 月",
+        dateFr:"Avril 2026",
+        title:"听证会",
+        titleFr:"L'audition",
+        icon:"🏛️",
+        text:"议会调查委员会传唤你，质询 2024 年预算滑坡与那封警报信。报告人来自激进左翼，镜头全开。",
+        textFr:"La commission d'enquête te convoque : dérapage budgétaire 2024 et la fameuse lettre. Rapporteur de la gauche radicale, caméras allumées.",
+        choices:[
+        {t:"火力全开：指控「政治法庭」", tFr:"Dénoncer le « tribunal politique »", e:{"med": 3, "pop": 1, "leg": -2}, o:"你在镜头前压住了场面；但「傲慢、逃避」的印象也跟着加深。", oFr:"La scène tenue — « arrogant, fuyant », retient-on."},
+        {t:"数据自辩，逐条还原时间线", tFr:"Se défendre par la chronologie", e:{"leg": 3, "med": 1, "pop": -2}, o:"你用数据稳住阵脚；但冗长的自辩没人看完。", oFr:"Les faits posés — que personne ne lit jusqu'au bout."},
+        {t:"部分认账：「监管本可更快」", tFr:"Concéder : « on aurait pu aller plus vite »", e:{"pop": 2, "leg": 1, "res": -2}, o:"一句认账换来一点谅解；但也被自己阵营嫌「软」。", oFr:"La concession apaise — ton camp la juge faible."}
+      ] },
+      { date:"2026 年 5 月",
+        dateFr:"Mai 2026",
+        title:"赛道的选择",
+        titleFr:"Choisir son couloir",
+        icon:"🛤️",
+        text:"年底新书已签约，年轻一代候选人纷纷入场。你的赛道是什么：候选人、造王者，还是著书者？",
+        textFr:"Le livre est signé pour la fin d'année ; la jeune génération se déclare. Ton couloir : candidat, faiseur de roi, ou auteur ?",
+        choices:[
+        {t:"暗组班底，预备入场", tFr:"Monter une équipe en silence", e:{"res": 3, "med": 1, "leg": -1}, o:"班底悄悄搭起来了；但「都这把年纪了还要再战」的议论也起来了。", oFr:"L'équipe se monte — « encore lui, à son âge ? »", flag:"flagPrep"},
+        {t:"造王者：待价而沽", tFr:"Faiseur de roi", e:{"res": 3, "leg": 1, "pop": -1}, o:"你把自己变成关键砝码；但也把命运交到别人手里。", oFr:"Le poids décisif — entre les mains des autres."},
+        {t:"思想者：用书占领辩论", tFr:"L'auteur : occuper le débat par le livre", e:{"leg": 3, "med": 1, "res": -2}, o:"你占住思想高地；但被讥「只动笔、不下场」。", oFr:"Les idées tenues — « la plume, jamais l'arène »."}
+      ] },
+      { date:"2026 年 6 月",
+        dateFr:"Juin 2026",
+        title:"最后一次抉择",
+        titleFr:"Le dernier choix",
+        icon:"🏁",
+        text:"市政尘埃落定，宣布季开启：有人已从自己的城市宣布，有人在乡村小镇起跑。57 岁的你，最后一次选择。",
+        textFr:"Les municipales sont pliées, la saison des déclarations s'ouvre. À 57 ans, ton dernier choix.",
+        choices:[
+        {t:"宣布参选：经验对决青春", tFr:"Se déclarer : l'expérience contre la jeunesse", e:{"med": 4, "pop": 2, "res": -1}, o:"你正式入场。对手立刻拿你的资历做文章——一边说你经验老到，一边说你太老。", oFr:"Te voilà candidat. L'adversaire retourne ton CV : expérimenté, donc trop vieux."},
+        {t:"背书一位中间派候选人，换首相承诺", tFr:"Adouber un candidat central, contre Matignon", e:{"res": 4, "leg": 1, "med": -2}, o:"你用背书换来首相承诺；但也亲手关上自己的总统门。", oFr:"Matignon promis — l'Élysée refermé de ta main."},
+        {t:"退出竞逐，专注思想与教学", tFr:"Se retirer : les idées et l'enseignement", e:{"leg": 3, "med": -3}, o:"你体面退场，回到书与讲台；喧嚣与你无关了。", oFr:"Une sortie digne — le tumulte n'est plus ton affaire."}
+      ],
+        decl:true }
+    ]
+  }
+};
+
+const SURPRISES = {
+  outing: {
+    title: "被公开", titleFr: "L'outing",
+    html: `<p>就在你成为最年轻部长前后，一个旧日同窗——如今的律师——在社交网络上把你的性取向连同那段关系公之于众，还暗示你这个位子是靠这段关系换来的。outing 不由你选，连带的羞辱也不由你定。</p>`,
+    choices:[
+      {t:"克制回应一次，划清公私界限，不把取向当旗帜", tFr:"Répondre une fois, tracer la frontière, sans étendard", e:{leg:+2,pop:+1},
+       o:"你没否认、也没躲，只强调始终在公私之间「划一道密不透风的界线」，拒绝把取向当旗帜。这段关系是被对手抖出来的，不是你挑的时机；你只是没让它击垮你。",
+       oFr:"Ni déni, ni esquive : « une frontière étanche entre vie publique et vie privée ». Le moment ne t'appartenait pas ; la tenue, si."},
+      {t:"不回应，让它过去", tFr:"Ne pas répondre", e:{res:+1,med:-2},
+       o:"你一个字不说，让它过去；但沉默被各方按各自的剧本解读。",
+       oFr:"Pas un mot — et chacun lit ton silence à sa façon."},
+      {t:"反过来公开拥抱，把它举成一面旗帜", tFr:"L'assumer en étendard", e:{pop:+2,med:+2,leg:-1},
+       o:"你把它高高举起；赢得一批人，也被另一批人贴上「只剩这一个标签」。",
+       oFr:"L'étendard levé : des soutiens gagnés, une étiquette unique pour les autres."}
+    ]
+  },
+  covid: {
+    title: "2020 年 3 月 · 三国停摆", titleFr: "Mars 2020 · Trois pays à l'arrêt",
+    html: `<p>疫情同时压垮三国日常：马德里医疗系统过载并实施严格禁足，伦敦在「群体免疫」与封锁间急转弯，巴黎进入全国禁足。</p>
+    <p class="mt-2">经济停摆、学校关闭、边境收紧。各国政府民调先因「聚旗效应」冲高，随后被检测、口罩与疫苗的执行问题反噬。你的每个选择都被实时打分。</p>`
+  },
+  dissolution: {
+    title: "2024 年 6 月 · 解散震撼", titleFr: "Juin 2024 · La dissolution",
+    html: `<p>欧洲选举惨败当晚，总统宣布解散国民议会——连核心圈都措手不及。三周后的两轮立法选举将重塑一切。</p>
+    <p class="mt-2">这是第五共和国史上最高风险的制度赌博之一：它直接产生了悬浮议会、一年三任总理与 2025 年的预算僵局。</p>`
+  },
+  municipales2026: {
+    title: "2026 年 3 月 · 两轮真实模拟", titleFr: "Mars 2026 · Simulation en deux tours",
+    html: `<p>这不是脚本事件，是按真实布局做的<strong>两轮模拟</strong>：</p>
+    <ul class="list-disc pl-5 mt-2 text-[14px]">
+      <li><strong>第一轮（3 月 15 日）</strong>：你的得票率由四维数据 + 第一轮布局选择 + 少量运气合成；超过 10% 方可进入第二轮（真实规则）。</li>
+      <li><strong>第二轮（3 月 22 日）</strong>：对手票仓由 AI 对手实时数值换算；你刚做出的两轮之间抉择（合并/坚持/共和阵线）将直接改写第二轮得票。</li>
+      <li>战绩写入终局：影响 2027 排位推演的综合分与对手势能。</li>
+    </ul>
+    <p class="text-[color:var(--slate)] text-sm mt-3">终局将附 2026 年 3 月两轮真实开票事实注（投票率、定局比例、各方战绩，含来源链接），供与模拟结果对照。</p>`
+  }
+};
+
+// ===== AI 对手 v8.0 — 四个复合原型（由真实政治光谱「揉合」而成，非真人）=====
+// 原型素材（公开光谱）：左翼论坛（Mélenchon/Ruffin/Glucksmann 光谱）；市长建制（Philippe/Darmanin 光谱）；
+// 秩序右翼（Retailleau/Ciotti 光谱）；国民继承者（Le Pen/Bardella/Knafo 光谱）。
+const AI_OPPONENTS = [
+  {id:'tribun', name:'左翼论坛', nameFr:'The Left',
+   desc:'集会、罢工与道德控诉的扩音器。从决裂左翼到温和左翼的复合光谱：内部撕裂，但攻击你时枪口一致。',
+   anchor:13, act:()=>aiDrift('tribun')},
+  {id:'notable', name:'市长建制', nameFr:'Centre right',
+   desc:'手握大城市政厅与全国市长网络的建制中右。台词永远是：「我治理过真实的城市，你只发过新闻稿。」',
+   anchor:16, act:()=>aiDrift('notable')},
+  {id:'ordre', name:'秩序右翼', nameFr:'Hard right',
+   desc:'权威、移民、世俗性三板斧的古典右翼，正与国民阵营争夺同一片水域——并随时把你描成软弱。',
+   anchor:11, act:()=>aiDrift('ordre')},
+  {id:'heritiere', name:'国民继承者', nameFr:'Far right',
+   desc:'国民阵营的叙事机器：司法案件被转写为「迫害」，每起社会新闻都是弹药。代际交接中，势能不减反增。',
+   anchor:31, act:()=>aiDrift('heritiere')}
+];
+let aiState = {tribun:13, notable:16, ordre:11, heritiere:31};
+let aiHistory = {tribun:[13], notable:[16], ordre:[11], heritiere:[31]};
+// 民调式漂移：向各自锚点缓慢回归 + 小噪声；上限 45（除国民阵营 38 上限外其余 25）
+const AI_CAPS = {tribun:22, notable:25, ordre:20, heritiere:38};
+function aiDrift(id){
+  const a = AI_OPPONENTS.find(x=>x.id===id);
+  const cur = aiState[id];
+  const pull = (a.anchor - cur) * 0.15;                 // 回归力
+  const noise = (Math.random()*2 - 1) * 0.8;            // ±0.8 噪声
+  let next = cur + pull + noise;
+  next = Math.max(5, Math.min(AI_CAPS[id], next));
+  return { _set: Math.round(next*10)/10 };
+}
+
+// ===== 暗线伏击 AMBUSHES — 确定性引爆：(轨迹, 回合索引, flag 条件) =====
+// 机制：进入对应回合时检查 flags；命中则 AI 对手发起「话语权袭击」，玩家选择应对（部分选项带媒体值检定）。
+// 每条袭击的现实锚点见 anchor 字段（不在弹窗显示，可在源码核对）。
+const AMBUSHES = [
+  // —— 轨迹 A ——
+  { id:'a_pension', who:'cadet', turn:14, flag:'flagPensionDef', flag2:'flagBouclier', attacker:'tribun',
+    anchor:'2023 年退休改革 + 49.3 引发的街头与议会联动攻势（真实结构）',
+    title:'「64 岁 + 49.3」清算', titleFr:'« 64 ans + 49.3 »',
+    html:`<p>退休法案进入议会的当口，<strong>左翼论坛</strong>把你 2022 年的宪法工具使用记录做成传单：「他绕过你们的议员，现在要拿走你们的两年。」集会点名你。</p>`,
+    choices:[
+      {t:"上门迎战：去他们的集会区域辩论", tFr:"Aller débattre sur leur terrain", test:{stat:'med',th:42, ok:{med:+4,pop:+2,leg:+1}, ko:{med:-3,pop:-3}}, note:"媒体检定 42", noteFr:"Test médias 42"},
+      {t:"数据回应：公布逐条澄清", tFr:"Répondre par les chiffres", e:{leg:+2,pop:-2}}
+    ]},
+  { id:'a_immig', who:'cadet', turn:17, flag:'flagSilentImmig', attacker:'tribun',
+    anchor:'2023.12 移民法撕裂执政阵营后，2024.1 新总理被迫承接的真实结构',
+    title:'「沉默者来站台了」', titleFr:'« Le silencieux vient défendre »',
+    html:`<p>你上任总理首周，<strong>左翼论坛</strong>在议会质询中举起移民法文本：「这部法案撕裂你们阵营的时候，他一声不吭；今天他来替它站台了。」</p>`,
+    choices:[
+      {t:"直面承认权衡：「执政就是选择」", tFr:"« Gouverner, c'est choisir »", e:{leg:+3,pop:-2}},
+      {t:"反击其「永远反对」姿态", tFr:"Renvoyer l'opposition stérile", test:{stat:'med',th:45, ok:{med:+4,pop:+1}, ko:{med:-2,leg:-2}}, note:"媒体检定 45", noteFr:"Test médias 45"}
+    ]},
+  { id:'a_silence', who:'cadet', turn:20, flag:'flagLoyal', attacker:'notable',
+    anchor:'2024 年解散后中间阵营内部互相追责的真实氛围',
+    title:'「解散之夜你在哪里」', titleFr:'« O\u00F9 \u00E9tiez-vous ce soir-l\u00E0 »',
+    html:`<p>你刚接任党团主席，<strong>市长建制</strong>在采访中冷冷一句：「有人在解散之夜选择了沉默。市长们记得谁替地方说过话。」</p>`,
+    choices:[
+      {t:"事后披露：「我当晚表达过反对」", tFr:"Révéler ton désaccord d'alors", test:{stat:'res',th:42, ok:{leg:+3,med:+2}, ko:{leg:-2,res:-2}}, note:"人脉检定 42（需有人佐证）", noteFr:"Test réseaux 42"},
+      {t:"拒绝回看：「我只谈未来」", tFr:"« Je ne parle que de l'avenir »", e:{med:+1,leg:-1}}
+    ]},
+  { id:'a_quentin_fr', who:'cadet', turn:26, flag:'flagFrontRep', attacker:'heritiere',
+    anchor:'2026 年 2 月里昂 Quentin Deranque 案后，右翼/极右将矛头指向 LFI 及 2024 共和阵线的真实话语攻势（franceinfo/Reuters/BBC 报道结构）',
+    title:'话语权袭击：「共和阵线的账单」', titleFr:'Embuscade : « la facture du front républicain »',
+    html:`<p>你表态后没几天，<strong>国民继承者</strong>就把火引向你：发布会屏幕上是 2024 年 7 月你呼吁退选让票的录像——「是他组织的『共和阵线』把激进左翼议员送进了议会——今天的暴力，他有政治责任。」</p>
+    <p class="mt-2">麻烦在于：去年秋天你已在电视上松口说「不会再那样做」。如今旧录像与新表态被剪在一起，民调显示多数人反对再与激进左翼结盟。一桩刑案，把你两年里挪动过的脚步全部摊在台面上。</p>`,
+    choices:[
+      {t:"冷处理数日，待情绪回落再上电视把话讲清", tFr:"Laisser retomber, puis t'expliquer au 20h", test:{stat:'med',th:48, ok:{med:+4,leg:+3,pop:+2}, ko:{med:-4,pop:-3}}, note:"高风险媒体检定 48：沉得住则赢回叙事，沉不住被追打到市选", noteFr:"Test médias 48 — quitte ou double"},
+      {t:"立刻正面应战：哀悼归哀悼，账目归账目", tFr:"Le 20h frontal, sans attendre", e:{med:+1,pop:-2,leg:+1}},
+      {t:"司法切割：起诉诽谤+拒绝同台", tFr:"Plainte en diffamation, refus du duel", e:{leg:+2,med:-3,pop:-1}},
+      {t:"共情转向：去里昂悼念，不接指控的话头", tFr:"Aller à Lyon, ne pas répondre", e:{leg:+3,pop:+1,med:-2}}
+    ]},
+  { id:'a_quentin_nofr', who:'cadet', turn:26, notFlag:'flagFrontRep', attacker:'heritiere',
+    anchor:'同一事件的对照支线：未组共和阵线时，攻击转向「中间派纵容暴力氛围」',
+    title:'话语权袭击：「沉默的纵容」', titleFr:'Embuscade : « la complaisance »',
+    html:`<p><strong>国民继承者</strong>借里昂事件向所有建制阵营开火：「多年来你们对街头暴力轻描淡写——今天有人死了。」你虽未组织过退选让票，但「建制共谋」的大网照样把你罩进去。</p>`,
+    choices:[
+      {t:"切割并反击：公布你历来的治安投票记录", tFr:"Publier ton bilan sécuritaire", e:{leg:+2,med:+1,pop:-1}},
+      {t:"拒绝进入他们的框架，只谈哀悼", tFr:"Refuser le cadre, parler du deuil", e:{leg:+2,med:-2}}
+    ]},
+  { id:'a_muni_notable', who:'cadet', turn:28, attacker:'notable',
+    anchor:'2026 年真实事件：某大城市长公开宣称市政连任将「验证」其总统候选资格（RCF 第一轮盘点报道结构）',
+    title:'「我的城市为我背书」', titleFr:'« Ma ville me valide »',
+    html:`<p>两轮之间，<strong>市长建制</strong>在自己领先近十个百分点的城市宣布：「这座城市的信任，就是对我 2027 资格的验证。」他在把一场地方选举改写成总统初选——而你没有一座城。</p>`,
+    choices:[
+      {t:"嘲讽降维：「法国不是一座城的放大版」", tFr:"« La France n'est pas une ville en grand »", test:{stat:'med',th:44, ok:{med:+4,pop:+2}, ko:{med:-2}}, note:"媒体检定 44", noteFr:"Test médias 44"},
+      {t:"不接招，发布自己的全国助选战报", tFr:"Publier ton bilan de tournée", e:{res:+2,leg:+1}}
+    ]},
+  // —— 轨迹 B ——
+  { id:'b_dette', who:'veteran', turn:20, flag:'flagWhatever', attacker:'ordre',
+    anchor:'2025 年预算危机中，「不惜一切代价」与债务追责的真实辩论（含 2025.11 纪录片揭密信结构）',
+    title:'「债务是你的签名」', titleFr:'« La dette porte ta signature »',
+    html:`<p>信任投票崩塌当晚，<strong>秩序右翼</strong>电视开火：「三万亿债务上有他的签名。『不惜一切代价』——现在轮到法国人付账。」</p>`,
+    choices:[
+      {t:"反问对方：「当时你们要求花得更多」", tFr:"« Vous demandiez plus de dépenses »", test:{stat:'med',th:40, ok:{med:+4,leg:+2}, ko:{med:-3,leg:-1}}, note:"媒体检定 40（档案站在你这边）", noteFr:"Test médias 40"},
+      {t:"承认代价、捍卫选择：「破产比债务更贵」", tFr:"« La faillite coûtait plus cher »", e:{leg:+3,pop:-2}}
+    ]},
+  { id:'b_lettre', who:'veteran', turn:22, flag:'flagLetter', attacker:'notable',
+    anchor:'2025 年 11 月电视调查披露 2024 年 4 月预算密信的真实事件结构',
+    title:'「他知道，但只写了密信」', titleFr:'« Il savait, il n\u2019a fait qu\u2019une lettre »',
+    html:`<p>纪录片播出当晚，<strong>市长建制</strong>补刀：「他 2024 年春就掌握真实数字，却只写了一封盖着『机密』的信。地方政府被砍预算时，他在沉默。」</p>`,
+    choices:[
+      {t:"公布信件全文与时间线", tFr:"Publier la lettre et la chronologie", e:{leg:+3,med:+2,res:-2}},
+      {t:"反击：「机密是为避免市场恐慌」", tFr:"« Le secret évitait la panique »", e:{leg:+1,med:-1}}
+    ]},
+  { id:'b_silence2', who:'veteran', turn:22, flag:'flagSilent', attacker:'tribun',
+    anchor:'同一纪录片事件的对照支线：未留警报记录时的左翼攻势',
+    title:'「连警报都没拉」', titleFr:'« M\u00EAme pas une alerte »',
+    html:`<p>纪录片披露：赤字脱轨时，你选择了程序性沉默。<strong>左翼论坛</strong>当晚定性：「这不是谨慎，是共谋。」</p>`,
+    choices:[
+      {t:"以程序自辩：「我走了每一级该走的渠道」", tFr:"« J'ai suivi chaque canal »", e:{leg:+1,med:-2}},
+      {t:"罕见认错：「我本该拉响警报」", tFr:"« J'aurais dû alerter »", e:{leg:+3,pop:+2,res:-2,med:-1}}
+    ]},
+  { id:'b_quentin', who:'veteran', turn:24, attacker:'heritiere',
+    anchor:'2026 年 2 月 Quentin Deranque 案：国民阵营发布会与全网叙事攻防的真实结构',
+    title:'话语权袭击：被点名的长者', titleFr:'Embuscade : le sage convoqu\u00E9',
+    html:`<p>里昂事件后，<strong>国民继承者</strong>召开发布会，把矛头指向「纵容极左的整个建制」，并点名你这类「体面圈长者」：「他们的沉默养大了打人的拳头。」你被强行拖进一场不属于你的战争。</p>`,
+    choices:[
+      {t:"长文回应：把辩论拉回国家权威与法治", tFr:"Recentrer sur l'État de droit", e:{leg:+3,med:+1,pop:-1}},
+      {t:"拒绝被点名带节奏，保持既定立场", tFr:"Ne pas céder au cadrage", e:{leg:+1,med:-2}}
+    ]},
+  { id:'b_muni_notable', who:'veteran', turn:26, attacker:'notable',
+    anchor:'同 a_muni_notable：大城市长将市政连任「全国化」的真实操作',
+    title:'「我的城市为我背书」', titleFr:'« Ma ville me valide »',
+    html:`<p>两轮之间，<strong>市长建制</strong>宣布其连任即是 2027 资格的「验证」。镜头转向你：一个没有城市、没有议席的前部长，凭什么留在牌桌上？</p>`,
+    choices:[
+      {t:"亮出你的牌：全国网络与经验溢价", tFr:"L'expérience comme capital", e:{res:+2,leg:+2,med:-1}},
+      {t:"讥讽市政总统化：「市政厅不是爱丽舍候机室」", tFr:"« Une mairie n'est pas une salle d'embarquement »", test:{stat:'med',th:42, ok:{med:+4,pop:+1}, ko:{med:-2,res:-1}}, note:"媒体检定 42", noteFr:"Test médias 42"}
+      ]},
+  { id:'b_corp', who:'veteran', turn:27, flag:'flagCorp', attacker:'tribun',
+    anchor:'2026 年 4 月议会调查委员会听证的真实事件结构（投机资本监管质询）',
+    title:'听证伏击：旋转门档案', titleFr:'Embuscade : les portes tournantes',
+    html:`<p>听证开场，<strong>左翼论坛</strong>的报告人直接亮出你的企业顾问合同：「部长任内监管他们，卸任后领他们的钱——请向委员会解释。」</p>`,
+    choices:[
+      {t:"逐条回应：合同条款排除了利益冲突", tFr:"Détailler les clauses", e:{leg:+2,med:-1}},
+      {t:"当场宣布退出该职务", tFr:"Annoncer ta démission du poste", e:{leg:+3,pop:+1,res:-3}}
+    ]},
+  { id:'b_us', who:'veteran', turn:27, flag:'flagUS', attacker:'tribun',
+    anchor:'同上听证结构：跨大西洋咨询职务的质询支线',
+    title:'听证伏击：大西洋的薪单', titleFr:'Embuscade : la fiche de paie atlantique',
+    html:`<p>报告人举起你纽约顾问职务的公开记录：「为美国客户提供地缘政治咨询的人，正坐在质询法国金融监管的证人席上。」</p>`,
+    choices:[
+      {t:"公开客户范围限定条款", tFr:"Publier le périmètre d'exclusion", e:{leg:+2,med:-1}},
+      {t:"反守为攻：要求委员会同等审查所有前官员", tFr:"Exiger l'égalité de traitement", e:{med:+2,leg:-1,pop:+1}}
+    ]}
+];
+
+// ===== 突发事件库 v8.0 — 法/英/西 2016–2026 真实时间线（精确年份过滤，绝不跨年错位）=====
+// 规则：每个取材于真实事件的条目附来源链接（可联网核验）；不虚构民调数字与选举结果。
+// c = 国别；years = 触发年窗；who = 仅限某条轨迹；src = 来源。
+const RANDOM_EVENTS = [
+  // —— 英西对照事件 · v8.1 增补（公开史实，年份锚定）——
+  { id:'scot2014', c:"\u{1F1EC}\u{1F1E7}", years:[2014,2014], title:"苏格兰公投 · Référendum écossais", titleFr:"Référendum écossais",
+    html:`<p>9 月，苏格兰独立公投以 55:45 否决，但联合王国被震出裂纹。巴黎的电视台连线你：「法国的地方分离倾向，该警惕吗？」</p>`,
+    choices:[
+      {t:"借题强调共和国一体不可分", tFr:"L'unité de la République", e:{leg:+2,pop:+1}},
+      {t:"淡化类比：「两国国情不同」", tFr:"« Contextes différents »", e:{res:+1,med:-1}}
+    ]},
+  { id:'rajoy2018', c:"\u{1F1EA}\u{1F1F8}", years:[2018,2018], title:"邻国首相被倒 · Censure à Madrid", titleFr:"Censure à Madrid",
+    html:`<p>6 月，西班牙首相在不信任案中被赶下台——该国民主史上首次。腐败案判决成了导火索。镜头问你：制度问责与政治稳定怎么平衡？</p>`,
+    choices:[
+      {t:"强调问责优先：「没人能凌驾判决」", tFr:"« Personne au-dessus des juges »", e:{leg:+2,med:+1,res:-1}},
+      {t:"强调稳定优先：警惕「为倒而倒」", tFr:"La stabilité d'abord", e:{res:+2,pop:-1}}
+    ]},
+  { id:'proro2019', c:"\u{1F1EC}\u{1F1E7}", years:[2019,2019], title:"议会休会风波 · Prorogation", titleFr:"La prorogation jugée illégale",
+    html:`<p>9 月，伦敦的首相为推脱欧让议会长时间休会，最高法院裁定违法、休会作废。法国演播室里有人问你：行政权碰议会的红线在哪？</p>`,
+    choices:[
+      {t:"明确站议会与法院一边", tFr:"Côté Parlement et juges", e:{leg:+2,pop:+1,res:-1}},
+      {t:"只谈程序，不评他国内政", tFr:"Pas d'ingérence", e:{res:+1,med:-1}}
+    ]},
+  { id:'pardons2021', c:"\u{1F1EA}\u{1F1F8}", years:[2021,2021], title:"加泰赦免 · Les grâces catalanes", titleFr:"Les grâces catalanes",
+    html:`<p>6 月，马德里赦免多名因公投案入狱的加泰领袖，赌「和解换降温」。法国右翼借机攻击「对分离主义软弱」，你被点名表态。</p>`,
+    choices:[
+      {t:"支持和解逻辑：降温优于对抗", tFr:"L'apaisement d'abord", e:{pop:+1,leg:+1,med:-1}},
+      {t:"强调法治不可让渡", tFr:"L'État de droit ne se négocie pas", e:{leg:+2,pop:-1}}
+    ]},
+  { id:'truss2022', c:"\u{1F1EC}\u{1F1E7}", years:[2022,2022], title:"49 天首相 · Le budget fatal", titleFr:"49 jours à Downing Street",
+    html:`<p>10 月，对岸一份无融资的减税「迷你预算」引爆市场，首相 49 天即去职。巴黎所有谈财政的人都拿它当教材——包括冲着你来的。</p>`,
+    choices:[
+      {t:"引为镜鉴：公开强调财政可信", tFr:"La crédibilité budgétaire", e:{leg:+3,pop:-1}},
+      {t:"拒绝类比：「法国不是英国」", tFr:"« La France n'est pas l'Angleterre »", e:{pop:+1,med:-1}}
+    ]},
+  { id:'rwanda2023', c:"\u{1F1EC}\u{1F1E7}", years:[2023,2024], title:"卢旺达方案违法 · Plan Rwanda retoqué", titleFr:"Le plan Rwanda retoqué",
+    html:`<p>11 月，伦敦把寻求庇护者外送卢旺达的方案被最高法院裁定违法。法国移民辩论正酣，两边都拿这判决说事，话筒递到你面前。</p>`,
+    choices:[
+      {t:"强调司法对政策的约束", tFr:"Le juge borne la politique", e:{leg:+2,res:-1}},
+      {t:"强调「欧洲需要新的移民答案」", tFr:"« Une réponse européenne »", e:{med:+2,pop:+1,leg:-1}}
+    ]},
+  { id:'sanchez2024', c:"\u{1F1EA}\u{1F1F8}", years:[2024,2024], title:"五日闭门 · Cinq jours de silence", titleFr:"Cinq jours de réflexion",
+    html:`<p>4 月，西班牙首相因针对其家人的司法调查宣布闭门五天、考虑辞职，举国屏息——最终留任。政治人物的私域与公职边界，再次被推上桌面。</p>`,
+    choices:[
+      {t:"声援：家人不该是武器", tFr:"La famille n'est pas une arme", e:{pop:+2,leg:+1,med:-1}},
+      {t:"不评论他国领导人去留", tFr:"Aucun commentaire", e:{res:+1}}
+    ]},
+  { id:'dana2024', c:"\u{1F1EA}\u{1F1F8}", years:[2024,2025], title:"瓦伦西亚洪灾 · Les inondations de Valence", titleFr:"La DANA de Valence",
+    html:`<p>10 月底，特大暴雨重创瓦伦西亚，二百余人遇难；预警迟缓引爆对地方与中央的双重怒火。法国媒体追问：我们的预警链条经得起这种雨吗？</p>`,
+    choices:[
+      {t:"主动要求审视本国预警体系", tFr:"Auditer nos alertes", e:{leg:+2,pop:+1,med:+1,res:-1}},
+      {t:"先哀悼，不借灾难谈政治", tFr:"Le deuil d'abord", e:{pop:+1,leg:+1}}
+    ]},
+  // —— 既有玩法事件（情境演绎，不附来源）——
+  { id:'lfi_motion', c:"\u{1F1EB}\u{1F1F7}", years:[2023,2026], title:"不信任动议 · Motion de censure", titleFr:"Motion de censure",
+    html:`<p><strong>左翼论坛</strong>牵头提交不信任动议，议会现场口号震天：把你这一年的每一道行政命令都念成「对民众的宣战清单」。镜头扫过你。</p>`,
+    choices:[
+      {t:"登台逐条反驳，把辩论拉回数字", tFr:"Réfuter point par point", e:{med:+2,leg:+2,pop:-2}},
+      {t:"不接对骂，只谈你做成的事", tFr:"Parler de ton bilan, pas de la rue", e:{leg:+2,res:+1,med:-1}}
+    ]},
+  { id:'lfi_greve', c:"\u{1F1EB}\u{1F1F7}", years:[2019,2025], title:"总罢工日 · Journée de grève", titleFr:"Journée de grève",
+    html:`<p>工会与<strong>左翼论坛</strong>联手发动全国大罢工，游行队伍把你的画像举成靶子。当晚新闻问你一句话：退，还是不退？</p>`,
+    choices:[
+      {t:"寸步不让：「街头不立法，议会才立法」", tFr:"« La rue ne fait pas la loi »", e:{leg:+3,pop:-3,med:+1}},
+      {t:"开一道口子谈判，给运动留台阶", tFr:"Ouvrir une concertation", e:{pop:+2,leg:-1,res:+1}}
+    ]},
+  { id:'media_leak', c:"\u{1F1EB}\u{1F1F7}", years:[2014,2026], title:"媒体泄密 · Fuite médiatique", titleFr:"Fuite médiatique",
+    html:`<p>《Le Canard enchaîné》披露你团队内部备忘录。</p>`,
+    choices:[
+      {t:"立即否认并起诉", tFr:"Démentir et poursuivre", e:{leg:+2,med:-2,pop:-2}},
+      {t:"冷处理，转移焦点", tFr:"No comment, changer de sujet", e:{med:+2,res:+2,pop:-1}}
+    ]},
+  { id:'nuit_sante', c:"\u{1F1EB}\u{1F1F7}", years:[2014,2016], who:'cadet', title:"深夜的疑似病例 · L'alerte de nuit", titleFr:"L'alerte de nuit",
+    html:`<p>凌晨两点，部委值班电话：一家医院收治一例疑似出血热病例——西非疫情正烈，确证检测清晨才出。流程没写明这一步谁拍板。叫不叫醒部长？</p>`,
+    choices:[
+      {t:"立刻叫醒：宁可虚惊，不可漏报", tFr:"Réveiller le ministre", e:{res:+2,leg:+1,med:-1}},
+      {t:"自己盯一夜，确证了再上报", tFr:"Veiller seul jusqu'à la confirmation", e:{leg:+2,res:-2}}
+    ]},
+  { id:'poll_crash', c:"\u{1F1EB}\u{1F1F7}", years:[2017,2026], title:"民调暴跌 · Sondage en chute", titleFr:"Chute dans les sondages",
+    html:`<p>一夜之间民调掉 4 个点。</p>`,
+    choices:[
+      {t:"上电视灭火", tFr:"Passer à la télé", e:{med:+3,pop:+2,leg:-1}},
+      {t:"闭门修整路线", tFr:"Retravailler la ligne", e:{leg:+2,res:+2,pop:-2}}
+    ]},
+  { id:'party_revolt', c:"\u{1F1EB}\u{1F1F7}", years:[2014,2020], title:"党内叛变 · Fronde interne", titleFr:"Fronde interne",
+    html:`<p>地方大佬公开质疑你的路线。</p>`,
+    choices:[
+      {t:"强硬回击", tFr:"Répliquer fermement", e:{leg:+3,res:-3}},
+      {t:"私下安抚", tFr:"Apaiser en coulisses", e:{res:+3,med:-1}}
+    ]},
+  { id:'snu', c:"\u{1F1EB}\u{1F1F7}", years:[2018,2020], who:'cadet', title:"全民服役争议 · SNU", titleFr:"Polémique SNU",
+    html:`<p>你力推 SNU，被批军事化青年。</p>`,
+    choices:[
+      {t:"坚持推行", tFr:"Maintenir", e:{leg:+2,pop:-2,med:+2}},
+      {t:"软化版本", tFr:"Assouplir", e:{pop:+2,res:+1}}
+    ]},
+  { id:'covid_schools', c:"\u{1F1EB}\u{1F1F7}", years:[2020,2021], who:'cadet', title:"学校停课 · Fermeture écoles", titleFr:"Fermeture des écoles",
+    html:`<p>疫情下是否关闭学校，你被推到前台。</p>`,
+    choices:[
+      {t:"支持关闭", tFr:"Fermer", e:{pop:+2,leg:+1}},
+      {t:"主张开放", tFr:"Garder ouvert", e:{med:+2,pop:-2}}
+    ]},
+  { id:'abaya', c:"\u{1F1EB}\u{1F1F7}", years:[2023,2023], who:'cadet', title:"Abaya 禁令 · Interdiction abaya", titleFr:"Interdiction de l'abaya",
+    html:`<p>2023 年开学，你宣布公立学校禁穿 abaya。</p>`,
+    choices:[
+      {t:"强硬执行", tFr:"Fermeté", e:{med:+3,leg:+2,pop:-2}},
+      {t:"对话解释", tFr:"Dialogue", e:{pop:+2,res:+2}}
+    ]},
+  { id:'dissolution_backlash', c:"\u{1F1EB}\u{1F1F7}", years:[2024,2025], title:"解散后遗症 · Après dissolution", titleFr:"Après dissolution",
+    html:`<p>你与解散决定保持距离，被爱丽舍核心圈冷落。</p>`,
+    choices:[
+      {t:"保持忠诚", tFr:"Rester loyal", e:{res:+2,leg:+1}},
+      {t:"拉开距离", tFr:"Prendre distance", e:{pop:+3,med:+2,res:-2}}
+    ]},
+  { id:'prep2027', c:"\u{1F1EB}\u{1F1F7}", years:[2025,2026], title:"2027 备战 · Préparation 2027", titleFr:"Préparation 2027",
+    html:`<p>媒体开始把你列为潜在候选人。</p>`,
+    choices:[
+      {t:"高调造势", tFr:"Monter en puissance", e:{med:+3,pop:+2,res:+1}},
+      {t:"低调积累", tFr:"Construire en silence", e:{leg:+2,res:+2}}
+    ]},
+  // —— 三国真实时间线事件（附来源）——
+  { id:'brexit2016', c:"\u{1F1EC}\u{1F1E7}", years:[2016,2016], title:"脱欧公投 · Brexit", titleFr:"Référendum du Brexit",
+    html:`<p>2016 年 6 月 23 日，英国公投以 51,9% 对 48,1% 选择脱离欧盟。震波直抵巴黎：疑欧阵营士气大振，欧洲议题重回法国政治中心。</p>
+    <div class="src">来源 · Source : <a href="https://www.bbc.com/news/politics/eu_referendum/results" target="_blank" rel="noopener">BBC — EU referendum results</a> · 可联网核验</div>`,
+    choices:[
+      {t:"高调捍卫欧洲一体化", tFr:"Défendre l'Europe haut et fort", e:{leg:+3,med:+3,pop:-2}},
+      {t:"谨慎承认主权焦虑", tFr:"Prendre acte de l'angoisse souverainiste", e:{pop:+3,res:+2,leg:-2}}
+    ]},
+  { id:'catalogne2017', c:"\u{1F1EA}\u{1F1F8}", years:[2017,2017], title:"加泰危机 · Cataluña", titleFr:"Crise catalane",
+    html:`<p>2017 年 10 月 1 日，加泰罗尼亚举行被西班牙宪法法院叫停的独立公投；马德里随后启动宪法第 155 条接管自治区。欧洲各国政府被迫表态。</p>
+    <div class="src">来源 · Source : <a href="https://en.wikipedia.org/wiki/2017_Catalan_independence_referendum" target="_blank" rel="noopener">Wikipedia — 2017 Catalan independence referendum</a> · 可联网核验</div>`,
+    choices:[
+      {t:"力挺宪政秩序", tFr:"Soutenir l'ordre constitutionnel", e:{leg:+3,res:+2}},
+      {t:"呼吁对话与去升级", tFr:"Appeler au dialogue", e:{pop:+2,med:+2,leg:-1}}
+    ]},
+  { id:'uk_snap2017', c:"\u{1F1EC}\u{1F1E7}", years:[2017,2017], title:"梅的赌局 · Élections anticipées", titleFr:"Le pari raté de Theresa May",
+    html:`<p>2017 年 6 月，Theresa May 提前大选弄巧成拙：保守党失去绝对多数，议会悬浮。一堂关于「解散赌局」的公开课。</p>
+    <div class="src">来源 · Source : <a href="https://www.bbc.com/news/election/2017/results" target="_blank" rel="noopener">BBC — Election 2017 results</a> · 可联网核验</div>`,
+    choices:[
+      {t:"引以为戒，记下这堂课", tFr:"Retenir la leçon", e:{leg:+3,res:+1}},
+      {t:"公开嘲讽对岸的失算", tFr:"Ironiser publiquement", e:{med:+2,pop:-1}}
+    ]},
+  { id:'gilets_fuel', c:"\u{1F1EB}\u{1F1F7}", years:[2018,2019], title:"燃油税与黄背心 · Gilets jaunes", titleFr:"La taxe carbone et les ronds-points",
+    html:`<p>燃油税点燃怒火：2018 年 11 月 17 日，黄背心首次全国动员，占领环岛。购买力自此成为法国政治的中心词。</p>
+    <div class="src">来源 · Source : <a href="https://en.wikipedia.org/wiki/Yellow_vests_protests" target="_blank" rel="noopener">Wikipedia — Yellow vests protests</a> · 可联网核验</div>`,
+    choices:[
+      {t:"主张冻结增税", tFr:"Geler la hausse", e:{pop:+6,leg:-2}},
+      {t:"坚持生态税逻辑", tFr:"Tenir la ligne écologique", e:{leg:+3,pop:-3}}
+    ]},
+  { id:'vox2018', c:"\u{1F1EA}\u{1F1F8}", years:[2018,2018], title:"Vox 破局 · Andalucía", titleFr:"Percée de Vox en Andalousie",
+    html:`<p>2018 年 12 月安达卢西亚大区选举，Vox 获 12 席——西班牙民主转型以来极右翼首次进入大区议会。欧洲极右上行曲线再添一国。</p>
+    <div class="src">来源 · Source : <a href="https://en.wikipedia.org/wiki/2018_Andalusian_regional_election" target="_blank" rel="noopener">Wikipedia — 2018 Andalusian regional election</a> · 可联网核验</div>`,
+    choices:[
+      {t:"倡议欧洲层面的防火墙", tFr:"Plaider le cordon sanitaire", e:{leg:+3,med:+2,pop:-1}},
+      {t:"研究其议题策略以为己用", tFr:"Étudier leur agenda", e:{res:+2,pop:+2,leg:-2}}
+    ]},
+  { id:'brexit_chaos', c:"\u{1F1EC}\u{1F1E7}", years:[2019,2019], title:"脱欧僵局 · Impasse", titleFr:"L'impasse du Brexit",
+    html:`<p>脱欧协议在下议院屡遭否决，议会陷入僵局；Boris Johnson 上台并尝试暂停议会，引发宪政风暴。「民粹治理」成为全欧辩题。</p>
+    <div class="src">来源 · Source : <a href="https://en.wikipedia.org/wiki/Brexit" target="_blank" rel="noopener">Wikipedia — Brexit</a> · 可联网核验</div>`,
+    choices:[
+      {t:"以英国为镜警示选民", tFr:"Brandir le contre-exemple", e:{leg:+3,med:+2}},
+      {t:"研究其传播策略", tFr:"Étudier leur com'", e:{med:+3,res:+1,leg:-1}}
+    ]},
+  { id:'espagne2019', c:"\u{1F1EA}\u{1F1F8}", years:[2019,2019], title:"一年两选 · Doble elección", titleFr:"Deux élections en un an",
+    html:`<p>西班牙一年内两度大选（4 月与 11 月）后，Sánchez 与 Unidas Podemos 组成民主转型以来首个全国联合政府。碎片化议会时代的组阁样本。</p>
+    <div class="src">来源 · Source : <a href="https://en.wikipedia.org/wiki/November_2019_Spanish_general_election" target="_blank" rel="noopener">Wikipedia — November 2019 Spanish general election</a> · 可联网核验</div>`,
+    choices:[
+      {t:"研究联合执政的章法", tFr:"Étudier la coalition", e:{res:+3,leg:+2}},
+      {t:"强调法式稳定的优越", tFr:"Vanter la stabilité française", e:{med:+2,pop:+1}}
+    ]},
+  { id:'brexit_done', c:"\u{1F1EC}\u{1F1E7}", years:[2020,2020], title:"正式脱欧 · Brexit acté", titleFr:"Le Brexit est fait",
+    html:`<p>2020 年 1 月 31 日英国正式退出欧盟，年底双方达成贸易与合作协议。渔业、加来口岸、金融城：法英双边议题清单瞬间变长。</p>
+    <div class="src">来源 · Source : <a href="https://en.wikipedia.org/wiki/Brexit_withdrawal_agreement" target="_blank" rel="noopener">Wikipedia — Brexit withdrawal agreement</a> · 可联网核验</div>`,
+    choices:[
+      {t:"为受冲击行业争取支持", tFr:"Défendre les filières exposées", e:{pop:+3,res:+2}},
+      {t:"主打欧洲团结叙事", tFr:"Capitaliser sur l'unité européenne", e:{leg:+3,med:+2}}
+    ]},
+  { id:'covid_eu', c:"\u{1F1EA}\u{1F1FA}", years:[2020,2021], title:"疫情震荡三国 · Covid", titleFr:"Le choc Covid",
+    html:`<p>疫情重创三国：西班牙两度进入紧急状态，英国超额死亡居欧洲前列，法国三度全国禁足。欧盟则破例共同举债，推出 7 500 亿欧元复苏基金。</p>
+    <div class="src">来源 · Source : <a href="https://commission.europa.eu/strategy-and-policy/recovery-plan-europe_en" target="_blank" rel="noopener">European Commission — NextGenerationEU</a> · 可联网核验</div>`,
+    choices:[
+      {t:"力挺欧洲共同债", tFr:"Soutenir la dette commune", e:{leg:+3,res:+2}},
+      {t:"主张国家优先复苏", tFr:"Priorité au plan national", e:{pop:+3,med:+1}}
+    ]},
+  { id:'partygate', c:"\u{1F1EC}\u{1F1E7}", years:[2021,2022], title:"Partygate", titleFr:"Partygate",
+    html:`<p>封锁期间唐宁街多场聚会曝光，Johnson 成为首位在任内因违反法律被罚款的英国首相，并于 2022 年 7 月宣布辞职。垂范（<em class="fr">exemplarité</em>）问题震动全欧政坛。</p>
+    <div class="src">来源 · Source : <a href="https://en.wikipedia.org/wiki/Partygate" target="_blank" rel="noopener">Wikipedia — Partygate</a> · 可联网核验</div>`,
+    choices:[
+      {t:"借题发挥谈政治垂范", tFr:"Parler exemplarité", e:{leg:+3,med:+2}},
+      {t:"不评论他国内政", tFr:"Ne pas commenter", e:{res:+2,leg:+1}}
+    ]},
+  { id:'truss2022', c:"\u{1F1EC}\u{1F1E7}", years:[2022,2022], title:"特拉斯 49 天 · Mini-budget", titleFr:"Les 49 jours de Liz Truss",
+    html:`<p>2022 年 9 月 23 日「迷你预算」宣布大规模无融资减税，英债与英镑应声暴跌，央行紧急救市；Truss 在位仅 49 天即下台。市场给所有财政部长上了一课。</p>
+    <div class="src">来源 · Source : <a href="https://en.wikipedia.org/wiki/September_2022_United_Kingdom_mini-budget" target="_blank" rel="noopener">Wikipedia — September 2022 mini-budget</a> · 可联网核验</div>`,
+    choices:[
+      {t:"引为财政信誉教材", tFr:"Ériger en leçon de crédibilité", e:{leg:+6,med:+2}},
+      {t:"抨击紧缩教条本身", tFr:"Dénoncer le dogme austéritaire", e:{pop:+3,leg:-2}}
+    ]},
+  { id:'inflation2022', c:"\u{1F1EA}\u{1F1FA}", years:[2022,2023], title:"通胀冲击 · Inflation", titleFr:"Le choc inflationniste",
+    html:`<p>能源危机推高物价：英国 CPI 于 2022 年 10 月达 11,1%（四十余年峰值）；西班牙推出「伊比利亚例外」限制气价；法国依靠电价盾。购买力登顶三国民意议程。</p>
+    <div class="src">来源 · Source : <a href="https://www.ons.gov.uk/economy/inflationandpriceindices" target="_blank" rel="noopener">ONS — Inflation and price indices</a> · 可联网核验</div>`,
+    choices:[
+      {t:"延长价格盾", tFr:"Prolonger le bouclier", e:{pop:+6,leg:-2}},
+      {t:"转向定向补贴", tFr:"Cibler les aides", e:{leg:+3,pop:+1}}
+    ]},
+  { id:'emeutes2023', c:"\u{1F1EB}\u{1F1F7}", years:[2023,2023], title:"六月底的骚乱 · Émeutes", titleFr:"Les émeutes de l'été 2023",
+    html:`<p>6 月底，一名 17 岁少年在警察拦检中死亡后，全国多座城市爆发连日骚乱。秩序与郊区政策之争再度撕开法国政治。</p>
+    <div class="src">来源 · Source : <a href="https://en.wikipedia.org/wiki/2023_France_riots" target="_blank" rel="noopener">Wikipedia — 2023 France riots</a> · 可联网核验</div>`,
+    choices:[
+      {t:"秩序优先的话语", tFr:"Discours d'ordre", e:{leg:+2,med:+2,pop:-2}},
+      {t:"兼谈郊区社会投资", tFr:"Parler aussi des quartiers", e:{pop:+3,res:+1}}
+    ]},
+  { id:'espagne2023', c:"\u{1F1EA}\u{1F1F8}", years:[2023,2023], title:"7·23 与特赦 · Amnistía", titleFr:"23-J et l'amnistie",
+    html:`<p>2023 年 7 月 23 日大选，PP 得票第一却无法组阁；Sánchez 以加泰独派支持留任，并推动特赦法，西班牙政治极化骤升。「赢了选举、丢了政府」的新样本。</p>
+    <div class="src">来源 · Source : <a href="https://en.wikipedia.org/wiki/2023_Spanish_general_election" target="_blank" rel="noopener">Wikipedia — 2023 Spanish general election</a> · 可联网核验</div>`,
+    choices:[
+      {t:"批评以特赦换组阁", tFr:"Dénoncer l'amnistie transactionnelle", e:{leg:+2,pop:+2,res:-1}},
+      {t:"视为议会制的常态运作", tFr:"Y voir le jeu parlementaire normal", e:{res:+2,leg:+1}}
+    ]},
+  { id:'agriculteurs2024', c:"\u{1F1EB}\u{1F1F7}", years:[2024,2024], title:"农民之怒 · Colère agricole", titleFr:"La colère des agriculteurs",
+    html:`<p>2024 年初，法国与西班牙等多国农民封锁高速、开拖拉机围堵布鲁塞尔，矛头指向规范负担与收入。绿色协议遭遇政治回潮。</p>
+    <div class="src">来源 · Source : <a href="https://en.wikipedia.org/wiki/2024_European_farmers%27_protests" target="_blank" rel="noopener">Wikipedia — 2024 European farmers' protests</a> · 可联网核验</div>`,
+    choices:[
+      {t:"下乡倾听并松绑规范", tFr:"Aller au-devant, simplifier", e:{pop:+6,res:+2,leg:-1}},
+      {t:"捍卫绿色转型的方向", tFr:"Défendre le cap écologique", e:{leg:+2,pop:-2}}
+    ]},
+  { id:'uk2024', c:"\u{1F1EC}\u{1F1E7}", years:[2024,2024], title:"7·4 清算 · Landslide", titleFr:"Le raz-de-marée du 4 juillet",
+    html:`<p>2024 年 7 月 4 日英国大选：工党获 411 席压倒性胜利，保守党 121 席创史上最差，Reform UK 得票约 14,3%。「清算式投票」与右翼碎片化同时上演。</p>
+    <div class="src">来源 · Source : <a href="https://www.bbc.co.uk/news/election/2024/uk/results" target="_blank" rel="noopener">BBC — Election 2024 results</a> · 可联网核验</div>`,
+    choices:[
+      {t:"研究 dégagisme 的机理", tFr:"Étudier le dégagisme", e:{res:+2,leg:+2}},
+      {t:"警惕本国阵营碎片化", tFr:"Alerter sur la fragmentation", e:{leg:+2,med:+2}}
+    ]},
+  { id:'dana2024', c:"\u{1F1EA}\u{1F1F8}", years:[2024,2024], title:"瓦伦西亚洪灾 · DANA", titleFr:"La DANA de Valence",
+    html:`<p>2024 年 10 月 29 日，瓦伦西亚地区 DANA 特大暴雨洪灾造成逾 220 人遇难，大区政府的预警与应对备受质疑。气候适应与危机问责同时摆上全欧议程。</p>
+    <div class="src">来源 · Source : <a href="https://en.wikipedia.org/wiki/2024_Spanish_floods" target="_blank" rel="noopener">Wikipedia — 2024 Spanish floods</a> · 可联网核验</div>`,
+    choices:[
+      {t:"推动气候适应投资议程", tFr:"Pousser l'adaptation climatique", e:{leg:+3,med:+2}},
+      {t:"聚焦危机管理问责", tFr:"Exiger la redevabilité", e:{pop:+2,med:+2}}
+    ]},
+  { id:'censure2024', c:"\u{1F1EB}\u{1F1F7}", years:[2024,2024], title:"政府被推翻 · Censure", titleFr:"La censure de décembre",
+    html:`<p>2024 年 12 月 4 日，Barnier 政府被不信任案推翻——1962 年以来首次。法国进入高频换相时代，政治不确定性外溢至债市。</p>
+    <div class="src">来源 · Source : <a href="https://en.wikipedia.org/wiki/Barnier_government" target="_blank" rel="noopener">Wikipedia — Barnier government</a> · 可联网核验</div>`,
+    choices:[
+      {t:"呼吁稳定与责任协议", tFr:"Appeler à un pacte de stabilité", e:{leg:+3,res:+2}},
+      {t:"把握权力真空期布局", tFr:"Occuper le vide", e:{med:+3,res:+2,leg:-2}}
+    ]},
+  { id:'blackout2025', c:"\u{1F1EA}\u{1F1F8}", years:[2025,2025], title:"伊比利亚大停电 · Apagón", titleFr:"Le grand black-out ibérique",
+    html:`<p>2025 年 4 月 28 日，西班牙与葡萄牙电网大面积瘫痪数小时，交通通信停摆。电网韧性与能源结构之争（含核能辩论）骤然升温。</p>
+    <div class="src">来源 · Source : <a href="https://en.wikipedia.org/wiki/2025_Iberian_Peninsula_blackout" target="_blank" rel="noopener">Wikipedia — 2025 Iberian Peninsula blackout</a> · 可联网核验</div>`,
+    choices:[
+      {t:"提出电网投资议程", tFr:"Plaider l'investissement réseau", e:{leg:+3,res:+2}},
+      {t:"借势重启核能辩论", tFr:"Relancer le débat nucléaire", e:{med:+3,pop:+1,leg:-1}}
+    ]},
+  { id:'bayrou2025', c:"\u{1F1EB}\u{1F1F7}", years:[2025,2025], title:"信任投票失利 · Confiance refusée", titleFr:"La confiance refusée",
+    html:`<p>2025 年 9 月 8 日，Bayrou 政府在国民议会信任投票中失利倒台。一年之内两届政府垮台，预算僵局延续，第五共和国的议会逻辑被推到极限。</p>
+    <div class="src">来源 · Source : <a href="https://en.wikipedia.org/wiki/Bayrou_government" target="_blank" rel="noopener">Wikipedia — Bayrou government</a> · 可联网核验</div>`,
+    choices:[
+      {t:"与乱局保持距离", tFr:"Se tenir à distance", e:{pop:+2,leg:+2}},
+      {t:"提出跨阵营团结方案", tFr:"Proposer une coalition d'intérêt général", e:{res:+3,med:+2,pop:-1}}
+    ]},
+  { id:'reform2025', c:"\u{1F1EC}\u{1F1E7}", years:[2025,2026], title:"移民议题登顶 · Immigration #1", titleFr:"L'immigration en tête outre-Manche",
+    html:`<p>2025 年 5 月，移民升至英国民意「首要问题」之首：49% 受访者提及，为 2016 年 6 月（脱欧公投前夕）以来最高；同期 Reform UK 在地方选举大胜。全年移民、经济与 NHS 稳居英国关切前三。</p>
+    <div class="src">来源 · Source : <a href="https://www.ipsos.com/en-uk/ipsos-issues-index-may-2025" target="_blank" rel="noopener">Ipsos — Issues Index, May 2025</a> · 可联网核验</div>`,
+    choices:[
+      {t:"研究右翼民粹的选民迁移", tFr:"Étudier la recomposition droitière", e:{res:+2,med:+2}},
+      {t:"坚守共和阵线逻辑", tFr:"Tenir la ligne du barrage", e:{leg:+3,pop:-1}}
+    ]},
+  { id:'vivienda2025', c:"\u{1F1EA}\u{1F1F8}", years:[2025,2026], title:"住房登顶 · Vivienda", titleFr:"Le logement, problème n°1 en Espagne",
+    html:`<p>住房自 2024 年底起连续位居西班牙「首要问题」之首，2025 年 11 月以 40% 的提及率创该系列纪录，2026 年初进一步升至 41–42%。一个可能外溢到全欧 2027 议程的信号。</p>
+    <div class="src">来源 · Source : <a href="https://www.cis.es" target="_blank" rel="noopener">CIS — Barómetros mensuales</a> · 可联网核验</div>`,
+    choices:[
+      {t:"把住房写入 2027 纲领核心", tFr:"Mettre le logement au cœur de 2027", e:{pop:+3,leg:+2}},
+      {t:"视为西班牙特有周期", tFr:"Y voir un cycle espagnol", e:{res:+1}}
+    ]}
+];
+
+// ===== 民生热度数据 2016–2026（来源可点击核验）=====
+const SALIENCE = {
+  fr: { flag:"\u{1F1EB}\u{1F1F7}", name:"法国 · France",
+    rows:[
+      ["2016–17","失业与恐袭后安全议题居首"],
+      ["2018–19","购买力随黄背心运动跃居第一"],
+      ["2020–21","公共卫生主导议程"],
+      ["2022–26","购买力持续居首；安全与移民关切上行"]
+    ],
+    src:[{n:"Eurobaromètre standard", u:"https://europa.eu/eurobarometer/screen/home"},{n:"Ipsos « Fractures françaises »", u:"https://www.ipsos.com/fr-fr"}] },
+  uk: { flag:"\u{1F1EC}\u{1F1E7}", name:"英国 · Royaume-Uni",
+    rows:[
+      ["2016–19","脱欧/欧盟长期居首"],
+      ["2020–21","疫情与 NHS"],
+      ["2022","通胀（CPI 峰值 11,1%，2022 年 10 月）"],
+      ["2023–24","NHS 与经济交替领先"],
+      ["2025–26","移民跃居首位（5 月达 49%，2016 年 6 月以来最高）；移民/经济/NHS 稳居前三，年末税收关切升至 2000 年来最高"]
+    ],
+    src:[{n:"Ipsos Issues Index", u:"https://www.ipsos.com/en-uk/important-issues-facing-britain"},{n:"ONS", u:"https://www.ons.gov.uk/economy/inflationandpriceindices"}] },
+  es: { flag:"\u{1F1EA}\u{1F1F8}", name:"西班牙 · España",
+    rows:[
+      ["2016–18","失业与腐败居首"],
+      ["2017","加泰危机骤升为全国议题"],
+      ["2020–21","疫情"],
+      ["2022","通胀与能源（「伊比利亚例外」限气价）"],
+      ["2024.12–26","住房连续居首：2025 年 11 月创纪录 40%，2026 年初升至 41–42%；移民、政治问题随后"]
+    ],
+    src:[{n:"CIS — Barómetros", u:"https://www.cis.es"}] }
+};
+
+// ===== AI 渲染 =====
+const AI_COLORS = {tribun:'#C0405B', notable:'#2C5FB3', ordre:'#3F7A4F', heritiere:'#7A5AA0'};
+function updateAI(){
+  const panel = document.getElementById('aiPanel');
+  if(!panel) return;
+  panel.innerHTML = AI_OPPONENTS.map(a=>{
+    const v = aiState[a.id];
+    return `<div><div class="flex justify-between mb-1"><span title="${a.desc}">${a.name} <span class="fr-reveal"><em class="fr text-[10px]">${a.nameFr}</em></span></span><span>${v}</span></div><div class="track"><div style="width:${v}%;background:${AI_COLORS[a.id]};height:100%"></div></div></div>`;
+  }).join('');
+  AI_OPPONENTS.forEach(a=>{ aiHistory[a.id].push(aiState[a.id]); if(aiHistory[a.id].length>30) aiHistory[a.id].shift(); });
+  drawAIChart();
+}
+function drawAIChart(){
+  const c = document.getElementById('aiChart'); if(!c) return;
+  const ctx = c.getContext('2d');
+  ctx.clearRect(0,0,c.width,c.height);
+  const maxLen = 30;
+  Object.keys(aiHistory).forEach(k=>{
+    const arr = aiHistory[k];
+    ctx.beginPath(); ctx.strokeStyle = AI_COLORS[k]; ctx.lineWidth = 1.5;
+    arr.forEach((v,i)=>{
+      const x = (i/(maxLen-1))*c.width;
+      const y = c.height - (v/100)*c.height;
+      if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    });
+    ctx.stroke();
+  });
+}
+
+// ===== 暗线伏击引擎 — 话语权袭击 =====
+function checkAmbush(cb){
+  if(!state) { if(cb) cb(); return false; }
+  const amb = AMBUSHES.find(a => a.who===state.char && a.turn===state.turn
+    && !(state.firedAmb||[]).includes(a.id)
+    && (!a.flag || state.flags[a.flag])
+    && (!a.flag2 || state.flags[a.flag2])
+    && (!a.notFlag || !state.flags[a.notFlag]));
+  if(!amb) { if(cb) cb(); return false; }
+  state.firedAmb = state.firedAmb || [];
+  state.firedAmb.push(amb.id);
+  state.ambTurn = state.turn;
+  showAmbush(amb, cb);
+  return true;
+}
+function showAmbush(amb, cb){
+  const atk = AI_OPPONENTS.find(a=>a.id===amb.attacker);
+  // 话语权袭击：发起方先吃叙事红利
+  aiState[amb.attacker] = Math.min(AI_CAPS[amb.attacker]||38, aiState[amb.attacker]+1.5);
+  const choicesHtml = amb.choices.map((c,i)=>`
+    <button class="choice w-full text-left p-3 mb-2" onclick="window.__ambChoice(${i})">
+      <div class="font-medium text-[14px]">${c.t}</div>
+      <div class="fr-line fr-reveal text-[12px]"><em class="fr">${c.tFr||''}</em></div>
+      ${c.note?`<div class="text-[11px] text-[color:var(--slate)] mt-1">${c.note}<span class="fr-reveal">${c.noteFr?` · <em class="fr">${c.noteFr}</em>`:''}</span></div>`:''}
+    </button>`).join('');
+  document.getElementById('modalContent').innerHTML = `
+    <div class="flex items-center gap-2 mb-3 flex-wrap">
+      <span class="px-2 py-1 text-[10px] uppercase tracking-wider rounded text-white lbl-atk">暗线引爆 · Embuscade</span>
+      <span class="chip-c" style="border-color:${AI_COLORS[amb.attacker]};color:${AI_COLORS[amb.attacker]}">发起方 ${atk?atk.name:''}</span>
+      <span class="lbl-sim">模拟</span>
+    </div>
+    <h3 class="display text-2xl mb-1">${amb.title}</h3>
+    <p class="fr-line text-sm mb-2"><em class="fr">${amb.titleFr||''}</em></p>
+    <div class="text-[15px] leading-relaxed mb-3">${amb.html}</div>
+    <p class="text-[12px] text-[color:var(--slate)] mb-3">这次袭击由你过去的选择触发（暗线）。发起方已先获 +1.5 势能；你的应对将决定净损益。</p>
+    <div>${choicesHtml}</div>`;
+  openModal();
+  const baseBtn = document.getElementById('modalBase');
+  if(baseBtn) baseBtn.style.display = 'none';
+  window.__ambChoice = (i)=>{
+    const c = amb.choices[i];
+    let outcome = '';
+    const apply = (e)=>Object.entries(e||{}).forEach(([k,d])=>{ if(state.stats[k]!==undefined) state.stats[k]=Math.max(0,Math.min(100,state.stats[k]+d)); });
+    if(c.test){
+      const pass = state.stats[c.test.stat] >= c.test.th;
+      apply(pass ? c.test.ok : c.test.ko);
+      if(pass){ aiState[amb.attacker] = Math.max(5, aiState[amb.attacker]-1.5); }
+      else { aiState[amb.attacker] = Math.min(AI_CAPS[amb.attacker]||38, aiState[amb.attacker]+1); }
+      const lbl = {pop:'人气',res:'人脉',leg:'正当性',med:'媒体'}[c.test.stat];
+      outcome = pass ? `检定成功（${lbl} ${state.stats[c.test.stat]} ≥ ${c.test.th}）：你夺回了话语权，发起方 −1.5。`
+                     : `检定失败（${lbl} < ${c.test.th}）：反击落空，发起方再 +1。`;
+    } else {
+      apply(c.e);
+      outcome = '你选择了稳妥应对；袭击的叙事红利部分留在了对方手里。';
+    }
+    state.history.push({amb:amb.id, choice:i});
+    document.getElementById('modalContent').innerHTML = `
+      <div class="flex items-center gap-2 mb-3"><span class="px-2 py-1 text-[10px] uppercase tracking-wider rounded text-white lbl-atk">袭击结算 · Bilan</span></div>
+      <h3 class="display text-xl mb-2">${amb.title}</h3>
+      <p class="text-[14px] leading-relaxed">${outcome}</p>
+      <div class="mt-3 p-3 rounded-lg bg-[color:var(--paper)] text-[12px]"><strong>AI对手实时：</strong>${AI_OPPONENTS.map(a=>`${a.name} ${aiState[a.id]}`).join(' · ')}</div>`;
+    if(baseBtn){ baseBtn.style.display=''; baseBtn.onclick = ()=>{ closeModal(); baseBtn.onclick = closeModal; updateStats(); updateAI(); saveGame(); if(cb) cb(); }; }
+    delete window.__ambChoice;
+  };
+}
+
+// ===== 突发事件触发（精确年份过滤 + 不重复 + 轨迹过滤；伏击回合不叠加突发）=====
+function triggerRandomEvent(cb){
+  const turn = SCENARIOS[state.char].turns[state.turn];
+  const m = (turn.date||'').match(/\d{4}/);
+  const year = m ? parseInt(m[0]) : 2012;
+  if(state.ambTurn === state.turn){ if(cb) cb(); return false; }
+  const pool = RANDOM_EVENTS.filter(ev =>
+    (!ev.years || (year>=ev.years[0] && year<=ev.years[1])) &&
+    (!ev.who || ev.who===state.char) &&
+    !(state.used||[]).includes(ev.id)
+  );
+  const prob = year<2016?0.3 : year<2020?0.5 : 0.6;
+  if(pool.length===0 || Math.random() >= prob){ if(cb) cb(); return false; }
+  // 英西对照事件权重 ×2（法国本土玩法事件权重 1）
+  const weighted = pool.flatMap(ev => (ev.c && ev.c !== '\u{1F1EB}\u{1F1F7}') ? [ev,ev] : [ev]);
+  const ev = weighted[Math.floor(Math.random()*weighted.length)];
+  state.used = state.used || [];
+  state.used.push(ev.id);
+
+  // AI 每回合仅在 advance() 漂移一次（render 不再重复推进）
+  updateAI();
+
+  const choicesHtml = ev.choices.map((c,i)=>`
+    <button class="choice w-full text-left p-3 mb-2" onclick="window.__randChoice(${i})">
+      <div class="font-medium text-[14px]">${c.t}</div>
+      <div class="fr-line fr-reveal text-[12px]"><em class="fr">${c.tFr||''}</em></div>
+    </button>`).join('');
+
+  document.getElementById('modalContent').innerHTML = `
+    <div class="flex items-center gap-2 mb-3">
+      <span class="px-2 py-1 text-[10px] uppercase tracking-wider rounded text-white" style="background:var(--orange)">突发 · Aléa (${year})</span>
+      <span class="chip-c">${ev.c||''}</span>
+    </div>
+    <h3 class="display text-2xl mb-1">${ev.title}</h3>
+    <p class="fr-line text-sm mb-2"><em class="fr">${ev.titleFr||''}</em></p>
+    <div class="text-[15px] leading-relaxed mb-4">${ev.html}</div>
+    <div>${choicesHtml}</div>
+    <div class="mt-4 p-3 rounded-lg bg-[color:var(--paper)] text-[12px]">
+      <strong>AI对手实时：</strong>
+      ${AI_OPPONENTS.map(a=>`${a.name} ${aiState[a.id]}`).join(' · ')}
+    </div>`;
+  openModal();
+  window.__randChoice = (i)=>{
+    const c = ev.choices[i];
+    Object.entries(c.e||{}).forEach(([k,d])=>{ if(state.stats[k]!==undefined) state.stats[k]=Math.max(0,Math.min(100,state.stats[k]+d)); });
+    state.history.push({rand:ev.id, choice:i});
+    closeModal(); delete window.__randChoice; if(cb) cb();
+  };
+  return true;
+}
+
+// ===== ENGINE =====
+let state = null;
+const SAVE_KEY = 'congzheng81';
+const SAVE_V = 81; // v8.1 内容重排，旧档不兼容
+const KEEP_KEY = 'congzheng_keep';
+// 默认：每次重开自动清空进度；开关关掉才保留
+if(localStorage.getItem(KEEP_KEY)!=='1'){ try{ localStorage.removeItem(SAVE_KEY); }catch(e){} }
+function toggleKeep(){
+  const on = localStorage.getItem(KEEP_KEY)==='1';
+  localStorage.setItem(KEEP_KEY, on?'0':'1');
+  const b=document.getElementById('keepBtn');
+  if(b) b.textContent = (localStorage.getItem(KEEP_KEY)==='1') ? '\u{1F4BE} 保留进度：开（重开不清档）' : '\u{1F9F9} 每次重开自动清空进度：开';
+}
+
+function toggleFr() {
+  document.body.classList.toggle('fr-on');
+  const on = document.body.classList.contains('fr-on');
+  const s = document.getElementById('frToggleStart'); if(s){ s.textContent = on?'隐藏法语 · Masquer le français':'显示法语对照 · Afficher le français'; s.classList.toggle('on',on); }
+  const g = document.getElementById('frToggleGame'); if(g){ g.classList.toggle('on',on); }
+}
+function toggleNotes() {
+  document.body.classList.toggle('notes-open');
+  const on = document.body.classList.contains('notes-open');
+  const s = document.getElementById('notesToggleStart'); if(s) s.classList.toggle('on',on);
+  const g = document.getElementById('notesToggleGame'); if(g) g.classList.toggle('on',on);
+}
+document.addEventListener('click', function(e){
+  const trig = e.target.closest('.annot');
+  if(trig){ const t = trig.querySelector('.annot-text'); if(t){ t.classList.toggle('force-open'); e.stopPropagation(); } }
+});
+
+// ===== 民生热度渲染 =====
+function salienceCard(c){
+  const d = SALIENCE[c];
+  return `<div class="rounded-xl border hair bg-white p-4">
+    <div class="font-bold text-[13px] mb-2">${d.flag} ${d.name}</div>
+    <div class="space-y-1.5 text-[12px] leading-relaxed">
+      ${d.rows.map(r=>`<div class="flex gap-2"><span class="text-[color:var(--slate-soft)] shrink-0 w-[64px]">${r[0]}</span><span class="text-[color:var(--ink-soft)]">${r[1]}</span></div>`).join('')}
+    </div>
+    <div class="src mt-2">来源 · Sources : ${d.src.map(s=>`<a href="${s.u}" target="_blank" rel="noopener">${s.n}</a>`).join(' · ')} · 可联网核验</div>
+  </div>`;
+}
+function renderSalienceStart(){
+  const el = document.getElementById('salienceStart');
+  if(el) el.innerHTML = ['fr','uk','es'].map(salienceCard).join('');
+}
+function salienceTab(c, btn){
+  document.querySelectorAll('.tab-c').forEach(b=>b.classList.remove('on'));
+  if(btn) btn.classList.add('on');
+  const el = document.getElementById('salienceSide');
+  if(!el) return;
+  const d = SALIENCE[c];
+  el.innerHTML = `<div class="space-y-1.5">
+    ${d.rows.map(r=>`<div class="flex gap-2"><span class="text-[color:var(--slate-soft)] shrink-0 w-[62px]">${r[0]}</span><span class="text-[color:var(--ink-soft)]">${r[1]}</span></div>`).join('')}
+  </div>
+  <div class="src mt-2">来源 · Sources : ${d.src.map(s=>`<a href="${s.u}" target="_blank" rel="noopener">${s.n}</a>`).join(' · ')}</div>`;
+}
+
+function resetAI(){
+  aiState = {tribun:40, notable:40, ordre:38, heritiere:42};
+  aiHistory = {tribun:[40], notable:[40], ordre:[38], heritiere:[42]};
+}
+
+function startGame(char) {
+  const s = SCENARIOS[char];
+  state = { char, turn: 0, stats: {...s.startStats}, history: [], used: [], flags: {}, firedAmb: [], ambTurn: -1, muniT1: null, muniT2: null, declChoice: null };
+  resetAI();
+  document.getElementById('startScreen').classList.add('hidden');
+  document.getElementById('gameScreen').classList.remove('hidden');
+  document.getElementById('playerName').textContent = s.name;
+  document.getElementById('avatar').style.background = s.color;
+  document.getElementById('avatar').textContent = s.avatar;
+  document.getElementById('contextBox').innerHTML = s.context;
+  document.getElementById('contextBoxFr').innerHTML = s.contextFr;
+  document.getElementById('contextBox').style.display = s.context ? '' : 'none';
+  document.getElementById('contextBoxFr').style.display = s.contextFr ? '' : 'none';
+  buildTimeline(); buildRoadmap(); render(); salienceTab('fr', document.querySelector('.tab-c[data-c="fr"]')); saveGame();
+  window.scrollTo({top:0});
+}
+
+function buildTimeline() {
+  const tl = document.getElementById('timeline'); tl.innerHTML = '';
+  SCENARIOS[state.char].turns.forEach((t,i)=>{
+    const dot = document.createElement('button');
+    dot.className = 'timeline-dot flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-[10px] border transition';
+    dot.style.borderColor = 'var(--hair)';
+    dot.innerHTML = `<span>${i+1}</span>`;
+    dot.title = t.dateFr + ' · ' + t.date;
+    dot.onclick = ()=>{ if(i<=state.turn) jumpTo(i); };
+    tl.appendChild(dot);
+  });
+}
+
+function buildRoadmap() {
+  const rm = document.getElementById('roadmap');
+  const turns = SCENARIOS[state.char].turns;
+  rm.innerHTML = turns.slice(0,8).map(t=>`<div class="flex gap-2"><span class="text-[color:var(--slate-soft)] shrink-0">${t.date}</span><span class="text-[color:var(--ink-soft)] truncate">${t.title}</span></div>`).join('') + `<div class="text-[color:var(--slate-soft)] mt-2">…… 30 回合，直到 2026 年的终局判定（两轮市镇模拟 → 2027 排位）</div>`;
+}
+
+function flagChips(){
+  const keys = Object.keys(state.flags||{});
+  if(!keys.length) return '';
+  return `<div class="mt-2">${keys.map(k=>`<span class="chip-flag">⚑ ${FLAG_INFO[k]||k}</span>`).join('')}</div>`;
+}
+
+function render() {
+  const s = SCENARIOS[state.char];
+  const turn = s.turns[state.turn];
+  document.getElementById('turnInfo').textContent = `第 ${state.turn+1}/${s.turns.length} 回合`;
+  document.getElementById('dateInfo').textContent = turn.dateFr;
+  document.getElementById('eventDate').textContent = turn.date + ' · ' + turn.dateFr;
+  document.getElementById('eventTitle').textContent = turn.title;
+  document.getElementById('eventTitleFr').innerHTML = turn.titleFr ? '<em class="fr">'+turn.titleFr+'</em>' : '';
+  document.getElementById('eventText').textContent = turn.text;
+  document.getElementById('eventTextFr').textContent = turn.textFr || '';
+  document.getElementById('eventIcon').textContent = turn.icon || '';
+
+  const cd = document.getElementById('choices'); cd.innerHTML = '';
+  turn.choices.forEach((c,idx)=>{
+    const btn = document.createElement('button');
+    btn.className = 'choice w-full text-left p-4';
+    btn.innerHTML = `<div class="flex items-start justify-between gap-3">
+      <div>
+        <div class="font-medium text-[15px] text-[color:var(--ink)]">${c.t}</div>
+        <div class="fr-line fr-reveal text-[12px] mt-0.5"><em class="fr">${c.tFr||''}</em></div>
+        ${c.note?`<div class="text-[12px] text-[color:var(--slate)] mt-1.5">${c.note}<span class="fr-reveal">${c.noteFr?` · <em class="fr">${c.noteFr}</em>`:''}</span></div>`:''}
+        ${c.flag?`<div class="text-[11px] text-[#6b5530] mt-1">⚑ 此选择会写入暗线</div>`:''}
+      </div>
+      <div class="text-[color:var(--slate-soft)] mt-0.5">→</div>
+    </div>`;
+    btn.onclick = ()=> choose(idx);
+    cd.appendChild(btn);
+  });
+
+  updateStats();
+  updateAI();
+  document.querySelectorAll('#timeline .timeline-dot').forEach((d,i)=>{
+    d.classList.remove('active'); d.style.background='transparent'; d.style.color='var(--slate)'; d.style.borderColor='var(--hair)';
+    if(i===state.turn){ d.classList.add('active'); d.style.background='var(--lp-blue)'; d.style.color='#fff'; d.style.borderColor='var(--lp-blue)'; }
+    else if(i<state.turn){ d.style.background='var(--hair)'; d.style.color='var(--ink-soft)'; }
+  });
+  const card = document.getElementById('eventCard');
+  card.classList.remove('card-enter'); void card.offsetWidth; card.classList.add('card-enter');
+}
+
+function updateStats() {
+  ['pop','res','leg','med'].forEach(k=>{
+    const v = Math.max(0, Math.min(100, state.stats[k]));
+    document.getElementById(`stat-${k}`).style.width = v+'%';
+    document.getElementById(`stat-${k}-val`).textContent = v;
+  });
+}
+
+function choose(idx) {
+  const s = SCENARIOS[state.char];
+  const turn = s.turns[state.turn];
+  const choice = turn.choices[idx];
+  Object.entries(choice.e).forEach(([k,delta])=>{ if(state.stats[k]!==undefined) state.stats[k] = Math.max(0, Math.min(100, state.stats[k]+delta)); });
+  if(choice.flag) state.flags[choice.flag] = true;
+  if(turn.muni==='t1') state.muniT1 = idx;
+  if(turn.muni==='t2') state.muniT2 = idx;
+  if(turn.decl) state.declChoice = idx;
+  state.history.push({turn:state.turn, choice:idx});
+  const after = ()=> { triggerRandomEvent(()=>advance()); }; // tRE 在所有分支恰好调用一次 cb，外层不补调
+  const ambushStep = ()=> { checkAmbush(after); }; // 暗线在玩家本回合表态之后引爆，再进突发
+  const chain = ()=> { if(turn.surprise && SURPRISES[turn.surprise]) showSurprise(turn.surprise, ambushStep); else ambushStep(); };
+  if(choice.o || (turn.oIf && turn.oIf.length)) showOutcome(turn, choice, chain);
+  else chain();
+}
+
+function showOutcome(turn, choice, cb) {
+  // 条件回扣：oIf 项在 flag 命中（或无 flag 条件）时附加显示并应用数值
+  let extra = '';
+  (turn.oIf||[]).forEach(o=>{
+    if(!o.flag || state.flags[o.flag]){
+      Object.entries(o.e||{}).forEach(([k,d])=>{ if(state.stats[k]!==undefined) state.stats[k]=Math.max(0,Math.min(100,state.stats[k]+d)); });
+      extra += `<p class="text-[14px] leading-relaxed mt-3 pt-3" style="border-top:1px dashed var(--hair)">${o.text}</p>` + (o.textFr?`<p class="fr-line text-[12px] mt-1"><em class="fr">${o.textFr}</em></p>`:'');
+    }
+  });
+  document.getElementById('modalContent').innerHTML = `
+    <div class="flex items-center gap-2 mb-3"><span class="px-2 py-1 text-[10px] uppercase tracking-wider rounded text-white" style="background:var(--lp-blue)">后果 · Conséquence</span></div>
+    <h3 class="display text-xl mb-2">${turn.title}</h3>
+    ${choice.o?`<p class="text-[15px] leading-relaxed">${choice.o}</p>`:''}
+    ${choice.oFr?`<p class="fr-line text-[13px] mt-2"><em class="fr">${choice.oFr}</em></p>`:''}
+    ${extra}`;
+  openModal();
+  const btn = document.getElementById('modalBase');
+  if(btn){ btn.style.display=''; btn.onclick = ()=>{ closeModal(); btn.onclick = closeModal; updateStats(); cb(); }; }
+}
+
+function advance() {
+  const total = SCENARIOS[state.char].turns.length;
+  if(state.turn >= total-1) { endGame(); return; }
+  AI_OPPONENTS.forEach(ai=>{ const d=ai.act(); if(d._set!==undefined) aiState[ai.id]=d._set; });
+  state.turn++; render(); saveGame(); window.scrollTo({top:0, behavior:'smooth'});
+}
+function jumpTo(i) { if(i<=state.turn) { state.turn = i; render(); } }
+
+function showSurprise(key, cb) {
+  const s = SURPRISES[key];
+  const hasChoices = Array.isArray(s.choices) && s.choices.length;
+  const choicesHtml = hasChoices ? s.choices.map((c,i)=>`
+    <button class="choice w-full text-left p-3 mb-2" onclick="window.__surpChoice(${i})">
+      <div class="font-medium text-[14px]">${c.t}</div>
+      <div class="fr-line fr-reveal text-[12px]"><em class="fr">${c.tFr||''}</em></div>
+    </button>`).join('') : '';
+  document.getElementById('modalContent').innerHTML = `
+    <div class="flex items-center gap-2 mb-3">
+      <span class="px-2 py-1 text-[10px] uppercase tracking-wider rounded text-white" style="background:var(--lp-blue)">事件 · Événement</span>
+    </div>
+    <h3 class="display text-2xl mb-1">${s.title}</h3>
+    <p class="fr-line text-sm mb-3"><em class="fr">${s.titleFr||''}</em></p>
+    <div class="text-[color:var(--ink-soft)] text-[15px] leading-relaxed">${s.html}</div>
+    ${hasChoices?`<div class="mt-3">${choicesHtml}</div>`:''}`;
+  openModal();
+  const baseBtn = document.getElementById('modalBase');
+  if(hasChoices){
+    if(baseBtn) baseBtn.style.display = 'none';
+    window.__surpChoice = (i)=>{
+      const c = s.choices[i];
+      Object.entries(c.e||{}).forEach(([k,d])=>{ if(state.stats[k]!==undefined) state.stats[k]=Math.max(0,Math.min(100,state.stats[k]+d)); });
+      if(c.flag) state.flags[c.flag] = true;
+      state.history.push({surp:key, choice:i});
+      document.getElementById('modalContent').innerHTML = `
+        <div class="flex items-center gap-2 mb-3"><span class="px-2 py-1 text-[10px] uppercase tracking-wider rounded text-white" style="background:var(--lp-blue)">后果 · Conséquence</span></div>
+        <h3 class="display text-xl mb-2">${s.title}</h3>
+        <p class="text-[15px] leading-relaxed">${c.o||''}</p>
+        ${c.oFr?`<p class="fr-line text-[13px] mt-2"><em class="fr">${c.oFr}</em></p>`:''}`;
+      if(baseBtn){ baseBtn.style.display=''; baseBtn.onclick = ()=>{ closeModal(); baseBtn.onclick = closeModal; updateStats(); saveGame(); if(cb) cb(); }; }
+      delete window.__surpChoice;
+    };
+  } else if(cb){ const btn = document.getElementById('modalBase'); btn.onclick = ()=>{ closeModal(); btn.onclick = closeModal; cb(); }; }
+}
+
+function openModal(){ const m=document.getElementById('modal'); m.classList.remove('hidden'); m.classList.add('flex'); }
+function closeModal(){ const m=document.getElementById('modal'); m.classList.add('hidden'); m.classList.remove('flex'); }
+
+// ===== 暗线词典（终局清算用）=====
+const FLAG_INFO = {
+  flagBackroom:'2012 幕后笔杆', flagNetwork:'2012 织自己的网', flagLocal:'2014 深耕地方', flagEarly:'2016 早押新门',
+  flagTerrain:'2017 地方老底子', flagWave:'2017 搭浪潮', flagDossier:'2018 法案路线', flagMedia:'2018 电视路线', flagBoth:'2018 两手抓',
+  flagSacrifice:'2018 退选换入阁', flagVolontaire:'补位者（直播/1欧餐/疫情）', flagBouclier:'2022 预算之盾', flagPensionDef:'2023 退休改革代言',
+  flagLaicite:'2023 开学禁令', flagSilentImmig:'2023 移民法置身事外', flagSpoke:'2024 解散夜发声', flagLoyal:'2024 解散夜沉默',
+  flagFrontRep:'2024 共和阵线', flagNiNi:'2024 都不要', flagLibre:'2024 党团独立声音', flagRigueur:'2025 背书紧缩', flagDistance:'2025 拒绝背书', flagVoile:'2025 禁巾提案',
+  flagLivre:'2026 宣言之书', flagOrdre26:'2026 秩序转向', flagFrontRep2:'2026 再组阵线',
+  flagPlume:'2012 写书立论', flagAppareil:'2012 深耕党机器', flagBothB:'2012 两手抓', flagCross:'2017 跨营入阁',
+  flagOffre:'2017 供给侧旗手', flagLargesse:'让利/支票', flagGafa:'2019 数字税硬顶', flagWhatever:'「不惜一切代价」的钱袋',
+  flagDetteEU:'2020 力推共同债', flagDeny:'2021 通胀「暂时性」', flagDelay:'2023 渐进偿债', flagLetter:'2024 机密警报信',
+  flagPublic:'2024 公开警报', flagSilent:'2024 程序性沉默', flagBilan:'2024 高调政绩', flagSwiss:'2024 出国教席',
+  flagCorp:'2025 芯片顾问', flagTacle:'2025 开炮继任者', flagUS:'2026 跨国顾问', flagRecup:'2026 借势秩序', flagPrep:'2026 暗组班底',
+};
+
+// ===== 2026 市镇两轮模拟（真实规则：≥10% 进第二轮）=====
+function computeMuni2(){
+  const isOwn = state.char==='cadet' && state.muniT1===0;
+  const stakes = isOwn ? 1 : (state.muniT1===2 ? 0.4 : 0.7);
+  const w = state.stats.res*0.35 + state.stats.pop*0.30 + state.stats.leg*0.20 + state.stats.med*0.15;
+  const t1BonusTable = { cadet:[6,3,-2], veteran:[4,2,-4] };
+  const t1Bonus = (t1BonusTable[state.char]||[0,0,0])[state.muniT1 ?? 1] || 0;
+  const anchor = state.char==='cadet' ? ((state.flags.flagLocal?2:0)+(state.flags.flagTerrain?2:0)+(state.flags.flagWave?-2:0)) : 0;
+  const luck1 = Math.round(Math.random()*8-4);
+  let t1 = Math.round(16 + (w + t1Bonus + anchor + luck1 - 20) * 0.5);
+  t1 = Math.max(7, Math.min(44, t1));
+  const qualified = t1 >= 10;
+  // 对手第一轮票仓：由 AI 实时数值换算（地方化）
+  const oppN = Math.max(10, Math.round(12 + aiState.notable*0.28 + (Math.random()*6-3)));
+  const oppH = Math.max(10, Math.round(10 + aiState.heritiere*0.30 + (Math.random()*6-3)));
+  const duelWho = oppH>=oppN ? 'heritiere' : 'notable';
+  const opp1 = Math.max(oppN, oppH);
+  if(!qualified){
+    return {t1, t2:null, opp1, opp2:null, duelWho, stakes, key:'out', label:'止步第一轮（未过 10% 线）', labelFr:'Éliminé au premier tour'};
+  }
+  // 第二轮：两轮之间抉择改写票流
+  const ch = state.muniT2 ?? 1;
+  const luck2 = Math.round(Math.random()*8-4);
+  let transfer, oppTransfer = 9;
+  if(state.char==='cadet'){
+    if(ch===0){ transfer = 13; }                                  // 与温和名单合并
+    else if(ch===1){ transfer = 6 + Math.round(Math.random()*10-5); oppTransfer = 6; } // 三角对决：高方差，对手票也被分流
+    else { transfer = (duelWho==='heritiere'? 17 : 9); }          // 共和阵线：对国民阵营特效
+  } else {
+    if(ch===0){ transfer = (duelWho==='heritiere'? 14 : 8); }     // 公开共和指引
+    else if(ch===1){ transfer = 7; }
+    else { transfer = 10; }                                        // 逐城表态
+  }
+  const t2 = Math.max(15, Math.min(62, t1 + transfer + luck2));
+  const opp2 = Math.max(15, Math.min(62, opp1 + oppTransfer + Math.round(Math.random()*6-3)));
+  const win = t2 > opp2;
+  const margin = Math.abs(t2-opp2);
+  let key, label, labelFr;
+  if(win && margin>=8){ key='win'; label='损失受控·守住关键阵地'; labelFr='Dégâts contenus'; }
+  else if(win){ key='win'; label='勉强止损'; labelFr='Pertes limitées de justesse'; }
+  else if(margin<=4){ key='loss'; label='损失较重'; labelFr='Pertes lourdes'; }
+  else { key='loss'; label='损失惨重'; labelFr='Déroute locale'; }
+  return {t1, t2, opp1, opp2, duelWho, stakes, key, label, labelFr};
+}
+
+// ===== 终局判定 v8.0 — 纯数值，不以任何真实人名作判定 =====
+function endGame() {
+  const s = SCENARIOS[state.char];
+  const lbl = {pop:'人气', res:'人脉', leg:'正当性', med:'媒体'};
+
+  // ① 市镇两轮模拟
+  const muni = computeMuni2();
+  const duelName = (AI_OPPONENTS.find(a=>a.id===muni.duelWho)||{}).name || '';
+  if(!state.muniApplied){
+    if(muni.key==='win'){
+      Object.keys(state.stats).forEach(k=> state.stats[k]=Math.min(100, state.stats[k]+Math.round(3*muni.stakes)));
+      aiState[muni.duelWho] = Math.max(5, aiState[muni.duelWho]-Math.round(3*muni.stakes));
+    }
+    if(muni.key==='loss' || muni.key==='out'){
+      aiState[muni.duelWho] = Math.min(AI_CAPS[muni.duelWho]||38, aiState[muni.duelWho]+Math.round(3*muni.stakes));
+    }
+    state.muniApplied = true; saveGame();
+  }
+
+  // ② 2027 排位推演（纯数值）
+  // 内部合成分（0–100 属性加权 + 市政/入场修正）
+  const compRaw = Math.round(state.stats.pop*0.3 + state.stats.med*0.25 + state.stats.res*0.25 + state.stats.leg*0.2)
+             + (muni.key==='win'? Math.round(4*muni.stakes) : muni.key==='loss'||muni.key==='out' ? -Math.round(4*muni.stakes) : 0)
+             + (state.declChoice===2 && state.char==='veteran' ? -6 : 0);
+  // 映射到与对手同一民调量纲（首轮投票意向 %）：
+  // 现实锚：原型在 2026 年的首轮意向约 10–18.5%。普通局 ≈10–15，极佳局封顶 21，崩盘局下探 6。
+  const comp = Math.max(6, Math.min(21, Math.round((10.5 + (compRaw - 45) * 0.22) * 10) / 10));
+  const field = AI_OPPONENTS.map(a=>({name:a.name, v:Math.round(aiState[a.id]*10)/10})).concat([{name:'你', v:comp, me:true}])
+                .sort((a,b)=>b.v-a.v);
+  const pos = field.findIndex(f=>f.me)+1;
+  let verdict, verdictFr;
+  if(pos===1){ verdict='第一梯队领跑：四个复合对手都得围绕你定位，但领先幅度才是 2027 的真问题。'; verdictFr='En tête du peloton — mais l\u2019écart fait tout.'; }
+  else if(pos===2){ verdict='第一挑战者：决选门票在望，需要一次决定性破局（或对手的一次司法/丑闻塌方）。'; verdictFr='Premier challenger.'; }
+  else if(pos===3){ verdict='居中位置：存在感稳固，但以当前数值更像「造王者」而非国王。'; verdictFr='Faiseur de roi plutôt que roi.'; }
+  else { verdict='边缘化区间：以当前数值大概率缺席 2027 决赛圈，需要一个重建周期。'; verdictFr='Zone de marginalisation.'; }
+
+  // ③ 长短板
+  const entries = Object.entries(state.stats);
+  const maxK = entries.reduce((a,b)=>b[1]>a[1]?b:a)[0];
+  const minK = entries.reduce((a,b)=>b[1]<a[1]?b:a)[0];
+  const strengthNote = {pop:'民意是你的引擎：直接诉诸选民的能力让对手不敢轻视你。',
+    res:'机器是你的：提名、资金、地方网络都认你的人情账。',
+    leg:'你以专业与稳健立身：危机时刻大家想到的是你。',
+    med:'你掌握叙事节奏：议程由你的采访与金句设定。'}[maxK];
+  const weakNote = {pop:'但民意单薄：精英认可换不来选票，街头不认识你。',
+    res:'但人脉欠账：没有机器，再高的人气也难转化为提名。',
+    leg:'但正当性存疑：对手会反复质问「你凭什么」。',
+    med:'但媒体失语：你做了很多，可没人讲你的故事。'}[minK];
+
+  // ④ 暗线清算
+  const flagsHtml = Object.keys(state.flags).map(k=>`<span class="chip-flag">⚑ ${FLAG_INFO[k]||k}</span>`).join('') || '<span class="text-[12px] text-[color:var(--slate)]">本局未写入任何暗线 flag。</span>';
+  const firedHtml = (state.firedAmb||[]).map(id=>{
+    const a = AMBUSHES.find(x=>x.id===id); if(!a) return '';
+    const atk = (AI_OPPONENTS.find(o=>o.id===a.attacker)||{}).name||'';
+    return `<div class="text-[12.5px]"><span class="lbl-atk px-1.5 py-0.5 rounded text-[10px] text-white">引爆</span> ${a.title} <span class="text-[color:var(--slate)]">· 发起方 ${atk}</span></div>`;
+  }).join('') || '<div class="text-[12px] text-[color:var(--slate)]">没有暗线被引爆——要么你选得干净，要么对手没等到时机。</div>';
+
+  // ⑤ 选择回放
+  const recapHtml = state.history.map(h=>{
+    if(h.rand!==undefined){
+      const ev = RANDOM_EVENTS.find(e=>e.id===h.rand);
+      return ev?`<div class="text-[12px]"><span class="text-[color:var(--orange)]">突发</span> ${ev.title} → ${ev.choices[h.choice]?.t||''}</div>`:'';
+    }
+    if(h.amb!==undefined){
+      const a = AMBUSHES.find(x=>x.id===h.amb);
+      return a?`<div class="text-[12px]"><span class="text-[color:var(--rose)]">暗线</span> ${a.title} → ${a.choices[h.choice]?.t||''}</div>`:'';
+    }
+    const t = s.turns[h.turn];
+    return t?`<div class="text-[12px]"><span class="text-[color:var(--slate-soft)]">${t.date}</span> ${t.title} → ${t.choices[h.choice]?.t||''}</div>`:'';
+  }).join('');
+
+  const muniDetail = muni.key==='out'
+    ? `第一轮 ${muni.t1}%（10% 线未过）— 对手方第一轮 ${muni.opp1}%`
+    : `第一轮 ${muni.t1}% vs 对手 ${muni.opp1}% → 第二轮 <strong>${muni.t2}%</strong> vs <strong>${muni.opp2}%</strong>（对决方：${duelName}）`;
+
+  document.getElementById('modalContent').innerHTML = `
+    <div class="text-left">
+      <div class="text-[11px] uppercase tracking-[1.5px] text-[color:var(--slate)] mb-2 text-center">2012–2026 · ${s.turns.length} 回合完成 · 终局判定（纯数值） <span class="lbl-sim">模拟</span></div>
+
+      <div class="verdict-box p-4 rounded-xl mb-4">
+        <div class="text-[11px] uppercase tracking-wide text-[color:var(--slate)] mb-1">① 2026 年 3 月市镇两轮模拟（15 日 / 22 日） <span class="lbl-sim">模拟</span></div>
+        <div class="serif text-2xl font-bold text-[color:var(--ink)]">${muni.label} <span class="fr-line text-base"><em class="fr">${muni.labelFr}</em></span></div>
+        <div class="text-[12.5px] text-[color:var(--slate)] mt-1">${muniDetail}</div>
+        <div class="text-[12px] text-[color:var(--slate)] mt-1">投入度 ×${muni.stakes} · ${muni.key==='win'?`全维度 +${Math.round(3*muni.stakes)}，${duelName} −${Math.round(3*muni.stakes)}`:muni.key==='loss'||muni.key==='out'?`${duelName} +${Math.round(6*muni.stakes)}`:''}</div>
+      </div>
+
+      <div class="verdict-box p-4 rounded-xl mb-4">
+        <div class="text-[11px] uppercase tracking-wide text-[color:var(--slate)] mb-2">② 2027 排位推演 · 首轮投票意向（由四维数值与市镇战绩映射，对手为实时民调势能） <span class="lbl-sim">模拟</span></div>
+        <div class="space-y-1 text-[13px]">
+          ${field.map((f,i)=>`<div class="flex justify-between ${f.me?'font-bold text-[color:var(--lp-blue-dark)]':''}"><span>${i+1}. ${f.name}</span><span>${f.v}%</span></div>`).join('')}
+        </div>
+        <p class="text-[13px] mt-2 text-[color:var(--ink-soft)]">${verdict}<span class="fr-line block text-[12px]"><em class="fr">${verdictFr}</em></span></p>
+        <p class="text-[11px] mt-1 text-[color:var(--slate)]">注：判定只比较数值。</p>
+        <p class="text-[10px] mt-2 text-[color:var(--slate-soft)] opacity-70">非真实，全为想象，仅供娱乐，禁止一切商业用途。<span class="fr-line"><em class="fr">Pure fiction — divertissement uniquement, tout usage commercial interdit.</em></span></p>
+      </div>
+
+      <div class="verdict-box p-4 rounded-xl mb-4">
+        <div class="text-[11px] uppercase tracking-wide text-[color:var(--slate)] mb-1">③ 长板与短板</div>
+        <p class="text-[13px] text-[color:var(--ink-soft)]"><strong>${lbl[maxK]} ${state.stats[maxK]}</strong> — ${strengthNote}</p>
+        <p class="text-[13px] text-[color:var(--ink-soft)] mt-1"><strong>${lbl[minK]} ${state.stats[minK]}</strong> — ${weakNote}</p>
+        <div class="grid grid-cols-4 gap-2 mt-3">
+          ${['pop','res','leg','med'].map(k=>`<div class="p-2 rounded-lg border hair bg-white text-center"><div class="text-[9px] uppercase text-[color:var(--slate)]">${lbl[k]}</div><div class="serif text-lg font-bold">${state.stats[k]}</div></div>`).join('')}
+        </div>
+      </div>
+
+      <div class="verdict-box p-4 rounded-xl mb-4">
+        <div class="text-[11px] uppercase tracking-wide text-[color:var(--slate)] mb-2">④ 暗线清算 · 你种下的与被引爆的</div>
+        <div class="mb-2">${flagsHtml}</div>
+        <div class="space-y-1">${firedHtml}</div>
+      </div>
+
+      <div class="verdict-box p-4 rounded-xl mb-4">
+        <div class="text-[11px] uppercase tracking-wide text-[color:var(--slate)] mb-1">⑤ 现实对照 · 2026 年 3 月真实开票（与你的模拟并排看） <span class="lbl-fact">事实</span></div>
+        <div class="text-[12.5px] leading-relaxed text-[color:var(--ink-soft)]">
+          <strong>第一轮（3 月 15 日）</strong>：17 时投票率 48,90%（2020 年同期 38,77%）；约 3.49 万个市镇、5.05 万份名单、90.4 万名候选人；约 95% 市镇一轮定局；国民阵营地方网络坐实；激进左翼在多座大城突破（马赛 11,94%、第四位，现任市长拒绝结盟）；一座大西洋港城的现任市长以近 10 个百分点领先，并公开把连任定义为对其 2027 候选资格的「验证」。
+        </div>
+        <div class="text-[12.5px] leading-relaxed text-[color:var(--ink-soft)] mt-2">
+          <strong>第二轮（3 月 22 日）</strong>：巴黎由左翼联盟以 50,52% 对 41,52% 胜出；左翼守住马赛、里昂、南特、里尔；与国民阵营结盟的右翼强人拿下尼斯；一位资深中间派以 344 票之差失守经营多年的市府；国民阵营宣称赢得约 70 个市镇、约 3 000 名市议员——其市镇层级最佳战绩，但在大都市仍未破顶。
+        </div>
+        <div class="src mt-2">来源 · Sources : <a href="https://www.interieur.gouv.fr/municipales2026-premier-tour" target="_blank" rel="noopener">Ministère de l'Intérieur — 1er tour</a> · <a href="https://www.touteleurope.eu/vie-politique-des-etats-membres/elections-municipales-2026-ce-qu-il-faut-retenir-des-resultats-du-premier-tour/" target="_blank" rel="noopener">Toute l'Europe — 1er tour</a> · <a href="https://www.franceinfo.fr/elections/municipales/resultats-du-fn/" target="_blank" rel="noopener">franceinfo — résultats</a> · <a href="https://www.touteleurope.eu/vie-politique-des-etats-membres/elections-municipales-2026-ce-qu-il-faut-retenir-du-second-tour/" target="_blank" rel="noopener">Toute l'Europe — 2d tour</a> · 可联网核验</div>
+      </div>
+
+      <details class="recap mb-3"><summary class="cursor-pointer text-[12px] text-[color:var(--slate)]">▸ 全程选择回放（${state.history.length} 步）</summary>
+        <div class="mt-2 space-y-1 max-h-[220px] overflow-y-auto pr-1">${recapHtml}</div>
+      </details>
+
+      <div class="text-center mt-4">
+        <button onclick="location.reload()" class="toggle-btn px-4 py-2.5 rounded-xl text-sm font-medium">再来一局 · Rejouer</button>
+      </div>
+    </div>`;
+  openModal();
+  const baseBtn = document.getElementById('modalBase');
+  if(baseBtn) baseBtn.style.display = 'none';
+  try { localStorage.removeItem(SAVE_KEY); } catch(e){}
+}
+
+function saveGame() {
+  if(!state) return;
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify({st:state, ai:aiState})); } catch(e){ return; }
+  const b = document.getElementById('surpriseBanner');
+  if(b){ b.textContent = '✓ 已保存 · Partie sauvegardée'; b.classList.remove('hidden'); setTimeout(()=>b.classList.add('hidden'),1500); }
+}
+
+function loadGame() {
+  let raw = null;
+  try { raw = localStorage.getItem(SAVE_KEY); } catch(e){}
+  if(!raw) { alert('没有 v8.0 存档 · Aucune sauvegarde v8.0'); return; }
+  let pack = null;
+  try { pack = JSON.parse(raw); } catch(e){}
+  const st = pack && pack.st;
+  if(!st || st.v!==SAVE_V || !SCENARIOS[st.char] || !st.stats || !st.flags) { alert('存档不兼容（旧版本）· Sauvegarde incompatible'); return; }
+  state = st;
+  state.used = state.used || [];
+  state.history = state.history || [];
+  state.firedAmb = state.firedAmb || [];
+  if(pack.ai && pack.ai.tribun!==undefined){ aiState = pack.ai; Object.keys(aiHistory).forEach(k=>aiHistory[k]=[aiState[k]]); }
+  const s = SCENARIOS[state.char];
+  document.getElementById('startScreen').classList.add('hidden');
+  document.getElementById('gameScreen').classList.remove('hidden');
+  document.getElementById('playerName').textContent = s.name;
+  document.getElementById('avatar').style.background = s.color;
+  document.getElementById('avatar').textContent = s.avatar;
+  document.getElementById('contextBox').innerHTML = s.context;
+  document.getElementById('contextBoxFr').innerHTML = s.contextFr;
+  document.getElementById('contextBox').style.display = s.context ? '' : 'none';
+  document.getElementById('contextBoxFr').style.display = s.contextFr ? '' : 'none';
+  buildTimeline(); buildRoadmap(); render(); salienceTab('fr', document.querySelector('.tab-c[data-c="fr"]'));
+}
+
+// ===== 初始化 =====
+renderSalienceStart();
+</script>
+<script>(function(){var b=document.getElementById('keepBtn'); if(b && localStorage.getItem('congzheng_keep')==='1'){ b.textContent='\u{1F4BE} 保留进度：开（重开不清档）'; }})();</script>
+</body>
+</html>
